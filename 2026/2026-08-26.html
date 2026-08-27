@@ -31,9 +31,10 @@
       line-height: 1.7;
     }
     .wrap {
-      max-width: 720px;
+      width: min(1080px, calc(100% - 3rem));
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 2.2rem 1.25rem 4rem;
+      padding: 2.2rem 0 4rem;
     }
     header.mast {
       border-bottom: 2px solid var(--ink);
@@ -174,7 +175,7 @@
       html { font-size: 16px; }
       h1 { font-size: 1.7rem; }
       .toc { grid-template-columns: 1fr; }
-      .wrap { padding: 1.4rem 1rem 3rem; }
+      .wrap { width: calc(100% - 2rem); padding: 1.4rem 0 3rem; }
     }
   </style>
 </head>

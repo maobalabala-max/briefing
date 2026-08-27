@@ -25,9 +25,10 @@
       line-height: 1.7;
     }
     .wrap {
-      max-width: 720px;
+      width: min(1080px, calc(100% - 3rem));
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 2.2rem 1.25rem 4rem;
+      padding: 2.2rem 0 4rem;
     }
     header.mast {
       border-bottom: 2px solid var(--ink);
@@ -58,8 +59,16 @@
     }
     a { color: var(--link); }
     a:hover { color: var(--link-hover); }
-    .archive { list-style: none; padding: 0; margin: 0; }
-    .archive li { margin: 0 0 0.85rem; }
+    .archive {
+      list-style: none; padding: 0; margin: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+    }
+    @media (min-width: 840px) {
+      .archive { grid-template-columns: 1fr 1fr; }
+    }
+    .archive li { margin: 0; }
     .archive a {
       display: block;
       text-decoration: none;
