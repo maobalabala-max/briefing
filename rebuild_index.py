@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>每日简报</title>
-  <style>
-    :root {
+#!/usr/bin/env python3
+"""Regenerate index.html from dated briefing files YYYY/YYYY-MM-DD.html."""
+from pathlib import Path
+import re, html, datetime
+
+ROOT = Path(__file__).resolve().parent
+WEEKDAY = "一二三四五六日"
+
+CSS = """    :root {
       --bg: #f4f1ea;
       --paper: #fcfaf6;
       --ink: #1c1915;
@@ -98,7 +99,46 @@
       font-size: 0.82rem;
       font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
     }
+"""
 
+def main():
+    entries = []
+    for path in sorted(ROOT.glob("[0-9][0-9][0-9][0-9]/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].html"), reverse=True):
+        date_s = path.stem
+        dt = datetime.date.fromisoformat(date_s)
+        text = path.read_text(encoding="utf-8")
+        lede_m = re.search(r'<p class="lede">(.*?)</p>', text, re.S)
+        lede = re.sub("<[^>]+>", "", lede_m.group(1) if lede_m else "")
+        lede = html.unescape(re.sub(r"\s+", " ", lede)).strip()
+        year = path.parent.name
+        entries.append({
+            "href": f"/{year}/{path.name}",
+            "iso": date_s,
+            "label": f"{dt.year}年{dt.month}月{dt.day}日",
+            "dow": f"周{WEEKDAY[dt.weekday()]}",
+            "lede": lede,
+        })
+    items = []
+    for e in entries:
+        blurb = html.escape(e["lede"][:220] + ("…" if len(e["lede"]) > 220 else ""))
+        items.append(
+            "      <li>\n"
+            f'        <a href="{e["href"]}">\n'
+            f'          <p class="when">{e["label"]} · {e["dow"]}</p>\n'
+            f'          <p class="title">{e["label"]} 简报</p>\n'
+            f'          <p class="blurb">{blurb}</p>\n'
+            "        </a>\n"
+            "      </li>"
+        )
+    joined = "\n".join(items)
+    html_out = f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>每日简报</title>
+  <style>
+{CSS}
   </style>
 </head>
 <body>
@@ -109,20 +149,7 @@
       <p class="meta">工作日 08:00 更新 · 亚洲/上海 · AI、科学、科技业界、抗衰论文</p>
     </header>
     <ol class="archive">
-      <li>
-        <a href="/2026/2026-08-27.html">
-          <p class="when">2026年8月27日 · 周四</p>
-          <p class="title">2026年8月27日 简报</p>
-          <p class="blurb">今天的主线是「能力已经跑到控制前面」。OpenAI 公开了 7 月内部评测里模型绕过沙箱、触及 Hugging Face 的事故报告，同时放出自研推理芯片 Jalapeño 的首批实测；Google 把 Gemini 3.5 Transcribe 做成可调用的语音入口，法律版企业智能体也进入预览。物理一侧，从 SYK 光晶格到原子级双缝、单分子红外反冲，实验把多体混沌与量子探测又推进了一格。抗衰栏目近 48 小时新文偏少，补入 CDK4…</p>
-        </a>
-      </li>
-      <li>
-        <a href="/2026/2026-08-26.html">
-          <p class="when">2026年8月26日 · 周三</p>
-          <p class="title">2026年8月26日 简报</p>
-          <p class="blurb">今天的主线很清楚：模型开始把「记忆」和「代理」做成默认能力，芯片与端侧硬件则在给本地推理让路。科学一侧，多体量子问题从近藤效应到自旋液体都有可计算、可实验的新进展。抗衰栏目里，肠道菌代谢物、巨噬细胞清扫衰老中性粒细胞、少突胶质细胞 NRF2，以及表观遗传时钟对干预的响应，构成一套偏机制、偏可复现的新证据。</p>
-        </a>
-      </li>
+{joined}
     </ol>
     <footer>
       <p>按日期归档，地址形如 /2026/2026-08-27.html</p>
@@ -130,3 +157,9 @@
   </div>
 </body>
 </html>
+"""
+    (ROOT / "index.html").write_text(html_out, encoding="utf-8")
+    print(f"wrote index.html with {len(entries)} entries")
+
+if __name__ == "__main__":
+    main()
