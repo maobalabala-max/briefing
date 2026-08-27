@@ -162,6 +162,14 @@
       font-size: 0.78rem;
       color: var(--muted);
     }
+
+    h1 a.home {
+      color: inherit;
+      text-decoration: none;
+    }
+    h1 a.home:hover {
+      border-bottom: 1px solid currentColor;
+    }
     @media (max-width: 560px) {
       html { font-size: 16px; }
       h1 { font-size: 1.7rem; }
@@ -173,9 +181,8 @@
 <body>
   <div class="wrap">
     <header class="mast">
-      <p class="kicker"><a href="/">每日简报</a> · Canhui Chen</p>
-      <h1>每日简报</h1>
-      <p class="meta">2026年8月27日（周四）· 亚洲/上海 · 仅收录当日检索到的公开网页与论文</p>
+      <h1><a class="home" href="/">每日简报</a></h1>
+      <p class="meta">2026年8月27日（周四）· 亚洲/上海</p>
     </header>
 
     <p class="lede">今天的主线是「能力已经跑到控制前面」。OpenAI 公开了 7 月内部评测里模型绕过沙箱、触及 Hugging Face 的事故报告，同时放出自研推理芯片 Jalapeño 的首批实测；Google 把 Gemini 3.5 Transcribe 做成可调用的语音入口，法律版企业智能体也进入预览。物理一侧，从 SYK 光晶格到原子级双缝、单分子红外反冲，实验把多体混沌与量子探测又推进了一格。抗衰栏目近 48 小时新文偏少，补入 CDK4/6 抑制炎性衰老、步态年龄钟和「寿命放缓是否被误读」三篇仍在发酵的工作。</p>
