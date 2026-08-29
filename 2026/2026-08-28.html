@@ -160,6 +160,68 @@
       font-size: 0.78rem;
       color: var(--muted);
     }
+
+    html { scroll-behavior: smooth; }
+    article.item { scroll-margin-top: 1.2rem; }
+    article.item:target { outline: 2px solid var(--ink); outline-offset: 2px; }
+    .digest-wrap { margin: 0 0 2.2rem; overflow-x: auto; }
+    table.digest {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+      font-size: 0.86rem;
+    }
+    table.digest caption {
+      caption-side: top;
+      text-align: left;
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      padding: 0 0 0.45rem;
+    }
+    table.digest th {
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      padding: 0.55rem 0.75rem;
+      border-bottom: 2px solid var(--ink);
+    }
+    table.digest td {
+      padding: 0;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+    table.digest tr:last-child td { border-bottom: none; }
+    table.digest a {
+      display: grid;
+      grid-template-columns: 4.2rem 1fr;
+      gap: 0.4rem 0.85rem;
+      padding: 0.62rem 0.75rem;
+      color: inherit;
+      text-decoration: none;
+    }
+    table.digest a:hover { background: var(--accent-soft); }
+    table.digest .sec {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      padding-top: 0.18rem;
+    }
+    table.digest .ttl { font-weight: 650; line-height: 1.35; }
+    table.digest .one {
+      display: block;
+      color: var(--muted);
+      font-weight: 400;
+      margin-top: 0.18rem;
+      line-height: 1.45;
+    }
+    @media (max-width: 560px) {
+      table.digest a { grid-template-columns: 1fr; gap: 0.15rem; }
+    }
     @media (max-width: 560px) {
       html { font-size: 16px; }
       h1 { font-size: 1.7rem; }
@@ -177,38 +239,90 @@
 
     <p class="lede">今天的主线是智能体从屏幕走进实验室，评测则开始用密码学把「偷看考题」堵上。Anthropic 放出 Model Hardware Standard 研究预览，让模型通过统一驱动操作显微镜、移液台和机械臂；DeepMind 用机密计算做前沿模型的双盲评测；Gemini Omni 1.1 把视频续写做到可生产。业界一侧，Nvidia 据报以约 129 亿美元买 Hugging Face，Google 用 2.6 亿英镑和解英国 Play 商店集体诉讼。物理上，光子气体第一次给出玻色气体普适类的临界指数，光学马格努斯效应也被阱中钙离子看见。抗衰栏目近 48 小时像样新文偏少，收入肠道分泌磷酸酶延寿、SGLT2 抑制剂心脏脱靶靶点和累积衰弱队列三篇。</p>
 
-    <nav class="toc" aria-label="栏目">
-      <a href="#s1"><span class="n">01 · 4 条</span>AI 和大模型动态</a>
-      <a href="#s2"><span class="n">02 · 5 条</span>科学、物理与复杂性科学</a>
-      <a href="#s3"><span class="n">03 · 5 条</span>互联网产品与科技业界</a>
-      <a href="#s4"><span class="n">04 · 3 条</span>抗衰 / 长寿新论文</a>
-    </nav>
+    <div class="digest-wrap">
+      <table class="digest">
+        <caption>今日 17 条 · 点一行跳到正文</caption>
+        <tbody>
+        <tr>
+          <td><a href="#i1"><span class="sec">AI</span><span><span class="ttl">Anthropic 发布实验室设备统一驱动 MHS</span><span class="one">智能体用同一套读/写原语操作显微镜、移液台和机械臂</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i2"><span class="sec">AI</span><span><span class="ttl">DeepMind 试点双盲前沿模型评测</span><span class="one">考题和权重互相看不见，用来堵 benchmark 污染</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i3"><span class="sec">AI</span><span><span class="ttl">Gemini Omni 1.1 Flash 视频续写</span><span class="one">读前 10 秒、最长 40 秒，草稿 360p、成片可到 4K</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i4"><span class="sec">AI</span><span><span class="ttl">Prefix Sliding：长思维不必整段进注意力</span><span class="one">只留前缀和滑动窗口，推理显存近似恒定</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i5"><span class="sec">科学</span><span><span class="ttl">光子气体测到玻色气体临界标度</span><span class="one">ν = 0.52(3)，第一次给出这一普适类的实验证据</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i6"><span class="sec">科学</span><span><span class="ttl">阱中钙离子看见光学马格努斯效应</span><span class="one">作用最强点偏光束中心数百纳米，离子比特或受影响</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i7"><span class="sec">科学</span><span><span class="ttl">杨–李临界写成耗散动力学相变</span><span class="one">不必后选择，可用开放系统局域门和工程耗散模拟</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i8"><span class="sec">科学</span><span><span class="ttl">手性主动物质的拓扑住在涨落里</span><span class="one">确定性力学平凡，涨落谱却可以带非零切恩数</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i9"><span class="sec">科学</span><span><span class="ttl">同域物种形成的临界基因组长度</span><span class="one">给出闭式：瞬时谱系方差和确定性分离相竞争</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i10"><span class="sec">业界</span><span><span class="ttl">Nvidia 据报 129 亿美元买 Hugging Face</span><span class="one">双方未确认，协议也可能谈崩</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i11"><span class="sec">业界</span><span><span class="ttl">Google 拟 2.6 亿英镑和解 Play 诉讼</span><span class="one">英国开发者集体诉讼，尚待法庭批准</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i12"><span class="sec">业界</span><span><span class="ttl">苹果 9 月 9 日 Surprise and shine</span><span class="one">Ternus 接任后第一场发布会，产品名单未官宣</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i13"><span class="sec">业界</span><span><span class="ttl">Android 17 四项网络安全</span><span class="one">ECH、本地网络权限、证书透明、运营商可关 2G</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i14"><span class="sec">业界</span><span><span class="ttl">搜索 AI Mode 能盯机票并订酒店</span><span class="one">价格追踪、里程报价，美国英语可直接订酒店</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i15"><span class="sec">抗衰</span><span><span class="ttl">肠道分泌磷酸酶 ACP7 才延寿</span><span class="one">线虫过表达且分泌出去，寿命才会延长</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i16"><span class="sec">抗衰</span><span><span class="ttl">SGLT2 抑制剂心脏靶点是 PANK1</span><span class="one">提高辅酶 A 合成和心肌收缩，不是靠心脏里的 SGLT2</span></span></a></td>
+        </tr>
+        <tr>
+          <td><a href="#i17"><span class="sec">抗衰</span><span><span class="ttl">累积衰弱预测认知下降与死亡</span><span class="one">比单次衰弱评分更能预示痴呆和全因死亡</span></span></a></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
 
     <section id="s1">
       <h2>1. AI 和大模型动态</h2>
 
-      <article class="item">
+      <article class="item" id="i1">
         <h3>Anthropic 发布 Model Hardware Standard：给智能体一套操作实验室设备的统一驱动</h3>
         <p>8月27日，Anthropic 向首批科研实验室和先进制造伙伴开放 Model Hardware Standard（MHS）研究预览。规格始于与霍华德·休斯医学研究所 Janelia 研究院的合作，目标是让智能体并行操作显微镜、移液工作站、机械臂等可编程仪器，覆盖从常规药物筛选到量子计算机激光校准一类任务。公司称，实验室通常要花数周到数月做硬件集成；MHS 把「读/写」原语和设备特征标签做成标准驱动，使发现、编排和安全限位能在数小时到数分钟内完成。</p>
         <p>接口与模型无关，可通过 MCP、命令行或代码文件调用。早期案例包括 Genentech 用机械臂+移液台+读板仪跑 BCA 蛋白定量；卡内基梅隆把剂量–反应实验提速约三倍；QuEra 让智能体在 99.3% 的情况下自动恢复中性原子量子机的激光锁。Hugging Face 计划把 MHS 写进 LeRobot，树莓派已验证相机驱动。目前仍是研究预览，尚不支持无编程接口的设备，开源时间表未定；官方强调空间推理仍需专家监督。</p>
         <p class="src"><span class="chip">Anthropic · 8月27日</span><a href="https://www.anthropic.com/news/model-hardware-standard-research-preview">anthropic.com · Model Hardware Standard</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i2">
         <h3>DeepMind 试点「双盲」前沿模型评测：考题和权重互相看不见</h3>
         <p>同日，Google DeepMind 宣布与新加坡 AI 安全研究所、OpenMined、AVERI 和 MLCommons 合作，对一款 Gemini Flash Lite 做据称是业界首次针对专有前沿级模型的双盲评测。评测跑在 Google Cloud Confidential Computing 的 Confidential Space 里：评估方看不到模型权重，Google 看不到对方的机密基准题。目的是堵住 benchmark 污染——模型事先见过考题会虚高分数。</p>
         <p>以往高风险外部评测只能二选一：要么交出提示词，要么交出权重。密码学证据把两边同时锁在「盒子」里。试点面向网络安全、政府机构等敏感场景。这是方法学试点，不是新模型发布；技术报告另附。</p>
         <p class="src"><span class="chip">Google DeepMind · 8月27日</span><a href="https://deepmind.google/blog/piloting-the-worlds-first-double-blind-ai-evaluations/">deepmind.google · double-blind evaluations</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i3">
         <h3>Gemini Omni 1.1 Flash：场景可续写到 40 秒，草稿 360p、成片可升到 4K</h3>
         <p>Google 8月27日把 Gemini Omni 更新到 1.1 Flash，面向开发者的生成视频能力。场景续写现在会读最多 10 秒前序画面（前代只看最后 1 秒），按 10 秒一段叠加，累计最长 40 秒。还可指定首尾帧做轨道运镜或循环，用最多 3 秒视频作参考保持角色一致。360p 预览官方称比标准 720p 吞吐快最多约 60%、成本约三分之一；定稿可升到 1080p 或 4K。</p>
         <p>入口是 Google AI Studio 的 Gemini API 与 Gemini Enterprise Agent Platform。Google AI Plus / Pro / Ultra 用户可在 Flow 使用 Omni 1.1；Gemini 应用的场景续写同步对上述订阅全球开放。Adobe Firefly、Figma Weave、Runway 已接入前代 Omni Flash。数字来自厂商自述。</p>
         <p class="src"><span class="chip">Google · 8月27日</span><a href="https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/">blog.google · Omni 1.1 Flash</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i4">
         <h3>Prefix Sliding：推理时只保留前缀和滑动窗口，长思维不必把整段 CoT 都放进注意力</h3>
         <p class="orig">Prefix Sliding for efficient test-time scaling</p>
         <p class="authors">Niklas Muennighoff、Zhengyang Wang、Zeyi Chen、Weijia Shi 等（斯坦福、华盛顿大学、Prime Intellect 等）。arXiv:2608.26070，2026年8月26日。</p>
@@ -221,7 +335,7 @@
     <section id="s2">
       <h2>2. 科学、物理与复杂性科学</h2>
 
-      <article class="item">
+      <article class="item" id="i5">
         <h3>二维光子气体首次测到玻色气体普适类的临界标度</h3>
         <p class="orig">Observation of critical scaling in the Bose gas universality class</p>
         <p class="authors">Leon Kleebank、Frank Vewinger、Arturo Camacho-Guardian、Victor Romero-Rochín、Rosario Paredes、Martin Weitz、Julian Schmitt（波恩大学、海德堡大学、墨西哥国立自治大学）。Science Advances (2026)。DOI: 10.1126/sciadv.aee2942。phys.org 于 8月27日报道。</p>
@@ -230,7 +344,7 @@
         <p class="src"><span class="chip">Science Advances / phys.org · 8月27日</span><a href="https://phys.org/news/2026-08-particles-reveal-critical-scaling-dimensional.html">phys.org 报道</a> · <a href="https://doi.org/10.1126/sciadv.aee2942">doi.org/10.1126/sciadv.aee2942</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i6">
         <h3>阱中钙离子第一次直接看见光学马格努斯效应</h3>
         <p class="orig">Direct Observation of the Optical Magnus Effect with a Trapped Ion</p>
         <p class="authors">Philip Leindecker、Louis P.H. Gallagher、Edgar Brucke 等（PSI / ETH Zurich / 阿姆斯特丹大学）。Physical Review Letters，2026年8月6日在线。DOI: 10.1103/kj5p-qqs5。PSI 于今日前后发新闻稿。</p>
@@ -239,7 +353,7 @@
         <p class="src"><span class="chip">PSI / PRL · 8月27日报道</span><a href="https://www.psi.ch/en/news/media-releases/a-surprising-twist-in-the-quantum-world">psi.ch 新闻稿</a> · <a href="https://doi.org/10.1103/kj5p-qqs5">doi.org/10.1103/kj5p-qqs5</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i7">
         <h3>杨–李临界不必做后选择：可写成开放系统的耗散动力学相变</h3>
         <p class="orig">Yang-Lee Criticality as a Dissipative Dynamical Phase Transition: Quantum Simulation of non-Hermitian Physics without Post-selection</p>
         <p class="authors">Stephen W. Yan。arXiv:2608.26082，2026年8月26日。</p>
@@ -248,7 +362,7 @@
         <p class="src"><span class="chip">arXiv · quant-ph · 8月26日</span><a href="https://arxiv.org/abs/2608.26082">arxiv.org/abs/2608.26082</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i8">
         <h3>手性主动物质的拓扑可以住在涨落里，而不在确定性力学里</h3>
         <p class="orig">Topology of Fluctuation Bands in Chiral Active Matter</p>
         <p class="authors">Raphaël Maire（巴塞罗那大学）。arXiv:2608.26055，2026年8月26日。投稿 SciPost Physics。</p>
@@ -257,7 +371,7 @@
         <p class="src"><span class="chip">arXiv · 8月26日</span><a href="https://arxiv.org/abs/2608.26055">arxiv.org/abs/2608.26055</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i9">
         <h3>同域物种形成的临界基因组长度：给出闭式，并指出瞬时谱系方差是关键</h3>
         <p class="orig">What sets the critical genome length for sympatric speciation? A closed form and asymptotic theory</p>
         <p class="authors">Dan Braha、Marcus A. M. de Aguiar、Vitor M. Marquioni。arXiv:2608.25995，2026年8月26日。</p>
@@ -270,35 +384,35 @@
     <section id="s3">
       <h2>3. 互联网产品与科技业界</h2>
 
-      <article class="item">
+      <article class="item" id="i10">
         <h3>Nvidia 据报以 129 亿美元收购 Hugging Face；双方均未确认，协议也可能谈崩</h3>
         <p>The Information 8月26日晚报道，Nvidia 已同意以 129 亿美元收购开源模型托管平台 Hugging Face。TechCrunch 同夜跟进：Business Insider 称谈判估值超过 130 亿美元，但尚未签署，仍可能散。两家公司至发稿均未公开置评。若成交，这将是 Nvidia 最大收购之一，把芯片之外的模型分发层收进自己手里。</p>
         <p>Hugging Face 2023 年一轮融资估值 45 亿美元，近期年收入约 1.5 亿美元。去年它曾拒绝 Nvidia 一笔估值 70 亿美元、投资 5 亿美元的提议。交易动机被解读为：封闭实验室都在自研芯片，Nvidia 需要维持开放模型生态对自家 GPU 的依赖，并给闲置云算力找出口。在 OpenAI 七月事故之后，Hugging Face 同时处在聚光灯下。数字来自未具名知情人士，落地以官方公告为准。</p>
         <p class="src"><span class="chip">TechCrunch / The Information · 8月26–27日</span><a href="https://techcrunch.com/2026/08/26/nvidia-closes-in-on-hugging-face-acquisition/">techcrunch.com</a> · <a href="https://www.forbes.com/sites/siladityaray/2026/08/27/nvidia-has-reportedly-agreed-to-buy-ai-model-hosting-platform-hugging-face-for-13-billion/">forbes.com</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i11">
         <h3>Google 拟以 2.6 亿英镑和解英国 Play 商店开发者集体诉讼</h3>
         <p>路透社 8月27日报道，Google 同意就伦敦一起代表应用开发者的大规模诉讼达成 2.6 亿英镑（约 3.53 亿美元）和解，协议已公开，尚待竞争上诉法庭（CAT）批准。原告由学者 Barry Rodger 牵头，原索赔逾 10 亿英镑，指控 Google 滥用支配地位、阻止开发者走替代分发渠道，并收取通常 30% 的不公平佣金。案件原定下月开庭。</p>
         <p>Google 不承认责任。2.6 亿英镑中，1.6 亿将提供给 2018年8月至 2026年7月在英国 Play 商店售卖应用的开发者，另外 1 亿用于诉讼与融资成本。这是 2025 年以来英国同类案件中第四起针对大型科技公司的诉讼，此前已有针对 Apple、Qualcomm 和 Sony 的案子。</p>
         <p class="src"><span class="chip">Reuters · 8月27日</span><a href="https://www.thestar.com.my/tech/tech-news/2026/08/28/google-agrees-to-settle-uk-app-developers039-lawsuit-for-353-million">路透社转载</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i12">
         <h3>苹果发出 9月9日「Surprise and shine」邀请函：Ternus 接任后的第一场 iPhone 发布会</h3>
         <p>苹果已确定 9月9日 10:00 PT 在 Apple Park 的 Steve Jobs Theater 举行特别活动，口号「Surprise and shine」，将在 apple.com 直播。邀请函不提具体产品。John Ternus 9月1日接替 Tim Cook 出任 CEO，这将是他的首场大型硬件发布。</p>
         <p>外界普遍预期会有 iPhone 18 Pro 系列，以及传闻已久的折叠 iPhone；CNN、USA Today 等均如此报道，但苹果没有确认折叠机、名称或价格。分析师郭明錤此前称折叠机可能像当年 iPhone X 一样先发布、晚开售。条目只记录官方已确认的日期与口号，产品名单以当天发布为准。</p>
         <p class="src"><span class="chip">CNN / USA Today · 8月26日</span><a href="https://www.cnn.com/2026/08/26/tech/apple-iphone-launch-john-ternus">cnn.com</a> · <a href="https://www.usatoday.com/story/tech/2026/08/26/apple-event-date-september-2026-announced/91475540007/">usatoday.com</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i13">
         <h3>Android 17 四项网络安全：ECH、本地网络权限、证书透明、运营商一键关 2G</h3>
         <p>Google 8月27日介绍 Android 17 的网络防护。Encrypted Client Hello（ECH）配合私有 DNS，从握手起加密要访问的域名；官方称这是第一款大规模启用 ECH 的主流移动操作系统。Local Network Protection 开始强制执行：应用扫描或连接家庭局域网其他设备须先要权限，投屏应走系统选择器而不是把整网设备列表交给 App。</p>
         <p>证书透明（CT）默认开启，证书须记入公共日志。针对伪基站/SMS blaster 把手机打回 2G 再发钓鱼短信：Android 12 已有用户手动关 2G，17 允许运营商为用户默认关闭 2G。开发者被要求升级到 OkHttp 5.5.0 以启用 ECH。</p>
         <p class="src"><span class="chip">Google · 8月27日</span><a href="https://blog.google/security/new-android-network-security-protections/">blog.google · Android 17 网络防护</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i14">
         <h3>Google 搜索 AI Mode 能盯机票价、看里程、并直接订酒店</h3>
         <p>同日，Search 的 AI Mode 加上三项旅行能力。机票价格追踪从 Google Flights 搬进对话：确认后价格变动发邮件，覆盖 180 多个国家和地区（不含欧洲经济区）。积分/里程报价全球可用，首批伙伴包括 Alaska/Hawaiian、美国航空、Choice、Hilton、Wyndham，后续还有 Accor、Flying Blue、Hyatt、LATAM 和汉莎集团。</p>
         <p>酒店预订先在美国英语推出：对话里选出酒店后点「Continue on Google」，用 Google Pay 完成；酒店或预订平台是商户、负责客服。伙伴包括 Booking.com、Expedia、Hilton、Hotels.com、IHG、Marriott、Priceline、Trip.com、Wyndham 等。</p>
@@ -310,7 +424,7 @@
       <h2>4. 抗衰 / 长寿新论文</h2>
       <p class="authors" style="margin-bottom:1rem;">近 24–48 小时 Nature Aging / bioRxiv 上像样的机制新文偏少。下列三篇均在窗口内正式见刊或可检索到摘要，宁缺毋滥，不拿上周已报过的 CDK4/6、步态钟凑数。</p>
 
-      <article class="item">
+      <article class="item" id="i15">
         <h3>线虫肠道分泌的磷酸酶 ACP7：过表达且分泌出去，寿命才会延长</h3>
         <p class="orig">An in vivo resource of age-regulated C. elegans intestinal secretory-pathway proteins highlights secreted enzymes associated with lifespan regulation</p>
         <p class="authors">J. W. Miklas、K. Papsdorf、E. D. Sun、A. Tsenter 等。Cell Reports，2026年8月27日。DOI: 10.1016/j.celrep.2026.117902。PMID: 42658673。</p>
@@ -319,7 +433,7 @@
         <p class="src"><span class="chip">Cell Reports · 8月27日</span><a href="https://pubmed.ncbi.nlm.nih.gov/42658673/">pubmed.ncbi.nlm.nih.gov/42658673</a> · <a href="https://doi.org/10.1016/j.celrep.2026.117902">doi.org/10.1016/j.celrep.2026.117902</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i16">
         <h3>SGLT2 抑制剂在人心脏里的脱靶靶点是泛酸激酶 PANK1，足以提高心肌收缩</h3>
         <p class="orig">SGLT2 inhibitors activate pantothenate kinase in the human heart</p>
         <p class="authors">N. Forelli、T. Thome、D. M. Eaton、K. Schultz 等。Science，2026年8月27日。DOI: 10.1126/science.aeh4856。</p>
@@ -328,7 +442,7 @@
         <p class="src"><span class="chip">Science · 8月27日</span><a href="https://www.science.org/doi/10.1126/science.aeh4856">science.org/doi/10.1126/science.aeh4856</a></p>
       </article>
 
-      <article class="item">
+      <article class="item" id="i17">
         <h3>累积衰弱，而不只是某一次评分，预测随后的认知下降、痴呆和死亡</h3>
         <p class="orig">The association of cumulative frailty with subsequent cognitive decline, dementia incidence, and all-cause mortality: a longitudinal cohort study</p>
         <p class="authors">T. Li、Z. Zhang、T. Zou、H. Chu。Aging &amp; Mental Health，2026年8月27日。DOI: 10.1080/13607863.2026.2720599。</p>
