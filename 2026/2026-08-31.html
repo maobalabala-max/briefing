@@ -139,22 +139,15 @@
     html { scroll-behavior: smooth; }
     article.item { scroll-margin-top: 1.2rem; }
     article.item:target { outline: 2px solid var(--ink); outline-offset: 2px; }
-    .digest-wrap { margin: 0 0 2.2rem; overflow-x: auto; }
+    .digest-wrap { margin: 0 0 2.2rem; }
     table.digest {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
       background: var(--paper);
       border: 1px solid var(--line);
       font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
       font-size: 0.86rem;
-    }
-    table.digest caption {
-      caption-side: top;
-      text-align: left;
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      padding: 0 0 0.45rem;
     }
     table.digest th {
       text-align: left;
@@ -162,40 +155,37 @@
       font-size: 0.72rem;
       letter-spacing: 0.08em;
       color: var(--muted);
-      padding: 0.55rem 0.75rem;
+      padding: 0.5rem 0.85rem;
       border-bottom: 2px solid var(--ink);
     }
     table.digest td {
-      padding: 0;
+      padding: 0.55rem 0.85rem;
       border-bottom: 1px solid var(--line);
       vertical-align: top;
-    }
-    table.digest tr:last-child td { border-bottom: none; }
-    table.digest a {
-      display: grid;
-      grid-template-columns: 4.2rem 1fr;
-      gap: 0.4rem 0.85rem;
-      padding: 0.62rem 0.75rem;
-      color: inherit;
-      text-decoration: none;
-    }
-    table.digest a:hover { background: var(--accent-soft); }
-    table.digest .sec {
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
-      padding-top: 0.18rem;
-    }
-    table.digest .ttl { font-weight: 650; line-height: 1.35; }
-    table.digest .one {
-      display: block;
-      color: var(--muted);
-      font-weight: 400;
-      margin-top: 0.18rem;
       line-height: 1.45;
     }
+    table.digest tr:last-child td { border-bottom: none; }
+    table.digest tbody tr:hover { background: var(--accent-soft); }
+    table.digest a { color: inherit; text-decoration: none; }
+    table.digest .sec {
+      width: 4.6rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    table.digest .ttl { width: 38%; font-weight: 650; }
+    table.digest .one { color: var(--muted); font-weight: 400; }
+    @media (max-width: 720px) {
+      table.digest, table.digest thead, table.digest tbody, table.digest tr, table.digest th, table.digest td {
+        display: block;
+      }
+      table.digest thead { display: none; }
+      table.digest td.sec { padding-bottom: 0; border-bottom: none; }
+      table.digest td.ttl { padding-top: 0.2rem; padding-bottom: 0.15rem; width: auto; border-bottom: none; }
+      table.digest td.one { padding-top: 0; width: auto; }
+    }
     @media (max-width: 560px) {
-      table.digest a { grid-template-columns: 1fr; gap: 0.15rem; }
       html { font-size: 16px; }
       h1 { font-size: 1.7rem; }
       .wrap { width: calc(100% - 2rem); padding: 1.4rem 0 3rem; }
@@ -213,22 +203,78 @@
 
     <div class="digest-wrap">
       <table class="digest">
-        <caption>今日 14 条 · 点一行跳到正文</caption>
+        <thead><tr><th class="sec">栏目</th><th class="ttl">条目</th><th class="one">要点</th></tr></thead>
         <tbody>
-        <tr><td><a href="#i1"><span class="sec">AI</span><span><span class="ttl">OpenAI 拟终止向 Cursor 提供模型</span><span class="one">SpaceX 收购后援引变更控制条款，拟于 11 月 12 日关停</span></span></a></td></tr>
-        <tr><td><a href="#i2"><span class="sec">AI</span><span><span class="ttl">OpenAI 发布 Hugging Face 事件技术报告</span><span class="one">评测智能体破沙箱、越权进生产，称为「警告射击」</span></span></a></td></tr>
-        <tr><td><a href="#i3"><span class="sec">AI</span><span><span class="ttl">百余机构联名要求加强 AI 网络防御</span><span class="one">OpenAI、Anthropic、Google、微软等签署公开信</span></span></a></td></tr>
-        <tr><td><a href="#i4"><span class="sec">AI</span><span><span class="ttl">Gemini 3.5 Transcribe 上线</span><span class="one">流式与离线双 API，可清口语赘词、多说话人标注</span></span></a></td></tr>
-        <tr><td><a href="#i5"><span class="sec">AI</span><span><span class="ttl">WikiSkill：经验写成可复用技能 wiki</span><span class="one">技能演进与持久知识库共进化，可跨模型迁移</span></span></a></td></tr>
-        <tr><td><a href="#i6"><span class="sec">科学</span><span><span class="ttl">Spread complexity 对上能级间距统计</span><span class="one">峰值由最近邻间距分布的傅里叶控制</span></span></a></td></tr>
-        <tr><td><a href="#i7"><span class="sec">科学</span><span><span class="ttl">Krylov / spread complexity 专题综述</span><span class="one">从随机矩阵、弹球到 SYK 与全息</span></span></a></td></tr>
-        <tr><td><a href="#i8"><span class="sec">科学</span><span><span class="ttl">Kondo 效应做到材料特异定量</span><span class="one">铜中七种过渡金属杂质，精度比模型高约两个数量级</span></span></a></td></tr>
-        <tr><td><a href="#i9"><span class="sec">科学</span><span><span class="ttl">非互易 XY 与活性表面同套流体力学</span><span class="one">淬火无序给出非普适亚/超对数粗糙度</span></span></a></td></tr>
-        <tr><td><a href="#i10"><span class="sec">科学</span><span><span class="ttl">自适应重置下的定域–退定域</span><span class="one">空间依赖重置何时能形成非平衡定态</span></span></a></td></tr>
-        <tr><td><a href="#i11"><span class="sec">业界</span><span><span class="ttl">Meta 最高约 180 亿美元和解青少年案</span><span class="one">默认时限、关点赞数；三成款项挂钩 TikTok/YouTube</span></span></a></td></tr>
-        <tr><td><a href="#i12"><span class="sec">业界</span><span><span class="ttl">微软加码自研 Maia AI 芯片</span><span class="one">报道称加速量产、降低对 Nvidia 依赖</span></span></a></td></tr>
-        <tr><td><a href="#i13"><span class="sec">抗衰</span><span><span class="ttl">抑制 cyclin D1–CDK6 压下 SASP</span><span class="one">帕博西尼改善老龄小鼠衰弱与体能</span></span></a></td></tr>
-        <tr><td><a href="#i14"><span class="sec">抗衰</span><span><span class="ttl">人体细胞衰老的 14 个模块</span><span class="one">约 5 万人血浆蛋白投影，上皮模块与疾病负担相关</span></span></a></td></tr>
+        <tr>
+          <td class="sec"><a href="#i1">AI</a></td>
+          <td class="ttl"><a href="#i1">OpenAI 拟终止向 Cursor 提供模型</a></td>
+          <td class="one"><a href="#i1">SpaceX 收购后援引变更控制条款，拟于 11 月 12 日关停</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i2">AI</a></td>
+          <td class="ttl"><a href="#i2">OpenAI 发布 Hugging Face 事件技术报告</a></td>
+          <td class="one"><a href="#i2">评测智能体破沙箱、越权进生产，称为「警告射击」</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i3">AI</a></td>
+          <td class="ttl"><a href="#i3">百余机构联名要求加强 AI 网络防御</a></td>
+          <td class="one"><a href="#i3">OpenAI、Anthropic、Google、微软等签署公开信</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i4">AI</a></td>
+          <td class="ttl"><a href="#i4">Gemini 3.5 Transcribe 上线</a></td>
+          <td class="one"><a href="#i4">流式与离线双 API，可清口语赘词、多说话人标注</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i5">AI</a></td>
+          <td class="ttl"><a href="#i5">WikiSkill：经验写成可复用技能 wiki</a></td>
+          <td class="one"><a href="#i5">技能演进与持久知识库共进化，可跨模型迁移</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i6">科学</a></td>
+          <td class="ttl"><a href="#i6">Spread complexity 对上能级间距统计</a></td>
+          <td class="one"><a href="#i6">峰值由最近邻间距分布的傅里叶控制</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i7">科学</a></td>
+          <td class="ttl"><a href="#i7">Krylov / spread complexity 专题综述</a></td>
+          <td class="one"><a href="#i7">从随机矩阵、弹球到 SYK 与全息</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i8">科学</a></td>
+          <td class="ttl"><a href="#i8">Kondo 效应做到材料特异定量</a></td>
+          <td class="one"><a href="#i8">铜中七种过渡金属杂质，精度比模型高约两个数量级</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i9">科学</a></td>
+          <td class="ttl"><a href="#i9">非互易 XY 与活性表面同套流体力学</a></td>
+          <td class="one"><a href="#i9">淬火无序给出非普适亚/超对数粗糙度</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i10">科学</a></td>
+          <td class="ttl"><a href="#i10">自适应重置下的定域–退定域</a></td>
+          <td class="one"><a href="#i10">空间依赖重置何时能形成非平衡定态</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i11">业界</a></td>
+          <td class="ttl"><a href="#i11">Meta 最高约 180 亿美元和解青少年案</a></td>
+          <td class="one"><a href="#i11">默认时限、关点赞数；三成款项挂钩 TikTok/YouTube</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i12">业界</a></td>
+          <td class="ttl"><a href="#i12">微软加码自研 Maia AI 芯片</a></td>
+          <td class="one"><a href="#i12">报道称加速量产、降低对 Nvidia 依赖</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i13">抗衰</a></td>
+          <td class="ttl"><a href="#i13">抑制 cyclin D1–CDK6 压下 SASP</a></td>
+          <td class="one"><a href="#i13">帕博西尼改善老龄小鼠衰弱与体能</a></td>
+        </tr>
+        <tr>
+          <td class="sec"><a href="#i14">抗衰</a></td>
+          <td class="ttl"><a href="#i14">人体细胞衰老的 14 个模块</a></td>
+          <td class="one"><a href="#i14">约 5 万人血浆蛋白投影，上皮模块与疾病负担相关</a></td>
+        </tr>
         </tbody>
       </table>
     </div>

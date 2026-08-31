@@ -164,22 +164,15 @@
     html { scroll-behavior: smooth; }
     article.item { scroll-margin-top: 1.2rem; }
     article.item:target { outline: 2px solid var(--ink); outline-offset: 2px; }
-    .digest-wrap { margin: 0 0 2.2rem; overflow-x: auto; }
+    .digest-wrap { margin: 0 0 2.2rem; }
     table.digest {
       width: 100%;
       border-collapse: collapse;
+      table-layout: fixed;
       background: var(--paper);
       border: 1px solid var(--line);
       font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
       font-size: 0.86rem;
-    }
-    table.digest caption {
-      caption-side: top;
-      text-align: left;
-      font-size: 0.78rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
-      padding: 0 0 0.45rem;
     }
     table.digest th {
       text-align: left;
@@ -187,40 +180,35 @@
       font-size: 0.72rem;
       letter-spacing: 0.08em;
       color: var(--muted);
-      padding: 0.55rem 0.75rem;
+      padding: 0.5rem 0.85rem;
       border-bottom: 2px solid var(--ink);
     }
     table.digest td {
-      padding: 0;
+      padding: 0.55rem 0.85rem;
       border-bottom: 1px solid var(--line);
       vertical-align: top;
-    }
-    table.digest tr:last-child td { border-bottom: none; }
-    table.digest a {
-      display: grid;
-      grid-template-columns: 4.2rem 1fr;
-      gap: 0.4rem 0.85rem;
-      padding: 0.62rem 0.75rem;
-      color: inherit;
-      text-decoration: none;
-    }
-    table.digest a:hover { background: var(--accent-soft); }
-    table.digest .sec {
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.06em;
-      padding-top: 0.18rem;
-    }
-    table.digest .ttl { font-weight: 650; line-height: 1.35; }
-    table.digest .one {
-      display: block;
-      color: var(--muted);
-      font-weight: 400;
-      margin-top: 0.18rem;
       line-height: 1.45;
     }
-    @media (max-width: 560px) {
-      table.digest a { grid-template-columns: 1fr; gap: 0.15rem; }
+    table.digest tr:last-child td { border-bottom: none; }
+    table.digest tbody tr:hover { background: var(--accent-soft); }
+    table.digest a { color: inherit; text-decoration: none; }
+    table.digest .sec {
+      width: 4.6rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      white-space: nowrap;
+    }
+    table.digest .ttl { width: 38%; font-weight: 650; }
+    table.digest .one { color: var(--muted); font-weight: 400; }
+    @media (max-width: 720px) {
+      table.digest, table.digest thead, table.digest tbody, table.digest tr, table.digest th, table.digest td {
+        display: block;
+      }
+      table.digest thead { display: none; }
+      table.digest td.sec { padding-bottom: 0; border-bottom: none; }
+      table.digest td.ttl { padding-top: 0.2rem; padding-bottom: 0.15rem; width: auto; border-bottom: none; }
+      table.digest td.one { padding-top: 0; width: auto; }
     }
     @media (max-width: 560px) {
       html { font-size: 16px; }
@@ -241,58 +229,92 @@
 
     <div class="digest-wrap">
       <table class="digest">
-        <caption>今日 17 条 · 点一行跳到正文</caption>
+        <thead><tr><th class="sec">栏目</th><th class="ttl">条目</th><th class="one">要点</th></tr></thead>
         <tbody>
         <tr>
-          <td><a href="#i1"><span class="sec">AI</span><span><span class="ttl">Anthropic 发布实验室设备统一驱动 MHS</span><span class="one">智能体用同一套读/写原语操作显微镜、移液台和机械臂</span></span></a></td>
+          <td class="sec"><a href="#i1">AI</a></td>
+          <td class="ttl"><a href="#i1">Anthropic 发布实验室设备统一驱动 MHS</a></td>
+          <td class="one"><a href="#i1">智能体用同一套读/写原语操作显微镜、移液台和机械臂</a></td>
         </tr>
         <tr>
-          <td><a href="#i2"><span class="sec">AI</span><span><span class="ttl">DeepMind 试点双盲前沿模型评测</span><span class="one">考题和权重互相看不见，用来堵 benchmark 污染</span></span></a></td>
+          <td class="sec"><a href="#i2">AI</a></td>
+          <td class="ttl"><a href="#i2">DeepMind 试点双盲前沿模型评测</a></td>
+          <td class="one"><a href="#i2">考题和权重互相看不见，用来堵 benchmark 污染</a></td>
         </tr>
         <tr>
-          <td><a href="#i3"><span class="sec">AI</span><span><span class="ttl">Gemini Omni 1.1 Flash 视频续写</span><span class="one">读前 10 秒、最长 40 秒，草稿 360p、成片可到 4K</span></span></a></td>
+          <td class="sec"><a href="#i3">AI</a></td>
+          <td class="ttl"><a href="#i3">Gemini Omni 1.1 Flash 视频续写</a></td>
+          <td class="one"><a href="#i3">读前 10 秒、最长 40 秒，草稿 360p、成片可到 4K</a></td>
         </tr>
         <tr>
-          <td><a href="#i4"><span class="sec">AI</span><span><span class="ttl">Prefix Sliding：长思维不必整段进注意力</span><span class="one">只留前缀和滑动窗口，推理显存近似恒定</span></span></a></td>
+          <td class="sec"><a href="#i4">AI</a></td>
+          <td class="ttl"><a href="#i4">Prefix Sliding：长思维不必整段进注意力</a></td>
+          <td class="one"><a href="#i4">只留前缀和滑动窗口，推理显存近似恒定</a></td>
         </tr>
         <tr>
-          <td><a href="#i5"><span class="sec">科学</span><span><span class="ttl">光子气体测到玻色气体临界标度</span><span class="one">ν = 0.52(3)，第一次给出这一普适类的实验证据</span></span></a></td>
+          <td class="sec"><a href="#i5">科学</a></td>
+          <td class="ttl"><a href="#i5">光子气体测到玻色气体临界标度</a></td>
+          <td class="one"><a href="#i5">ν = 0.52(3)，第一次给出这一普适类的实验证据</a></td>
         </tr>
         <tr>
-          <td><a href="#i6"><span class="sec">科学</span><span><span class="ttl">阱中钙离子看见光学马格努斯效应</span><span class="one">作用最强点偏光束中心数百纳米，离子比特或受影响</span></span></a></td>
+          <td class="sec"><a href="#i6">科学</a></td>
+          <td class="ttl"><a href="#i6">阱中钙离子看见光学马格努斯效应</a></td>
+          <td class="one"><a href="#i6">作用最强点偏光束中心数百纳米，离子比特或受影响</a></td>
         </tr>
         <tr>
-          <td><a href="#i7"><span class="sec">科学</span><span><span class="ttl">杨–李临界写成耗散动力学相变</span><span class="one">不必后选择，可用开放系统局域门和工程耗散模拟</span></span></a></td>
+          <td class="sec"><a href="#i7">科学</a></td>
+          <td class="ttl"><a href="#i7">杨–李临界写成耗散动力学相变</a></td>
+          <td class="one"><a href="#i7">不必后选择，可用开放系统局域门和工程耗散模拟</a></td>
         </tr>
         <tr>
-          <td><a href="#i8"><span class="sec">科学</span><span><span class="ttl">手性主动物质的拓扑住在涨落里</span><span class="one">确定性力学平凡，涨落谱却可以带非零切恩数</span></span></a></td>
+          <td class="sec"><a href="#i8">科学</a></td>
+          <td class="ttl"><a href="#i8">手性主动物质的拓扑住在涨落里</a></td>
+          <td class="one"><a href="#i8">确定性力学平凡，涨落谱却可以带非零切恩数</a></td>
         </tr>
         <tr>
-          <td><a href="#i9"><span class="sec">科学</span><span><span class="ttl">同域物种形成的临界基因组长度</span><span class="one">给出闭式：瞬时谱系方差和确定性分离相竞争</span></span></a></td>
+          <td class="sec"><a href="#i9">科学</a></td>
+          <td class="ttl"><a href="#i9">同域物种形成的临界基因组长度</a></td>
+          <td class="one"><a href="#i9">给出闭式：瞬时谱系方差和确定性分离相竞争</a></td>
         </tr>
         <tr>
-          <td><a href="#i10"><span class="sec">业界</span><span><span class="ttl">Nvidia 据报 129 亿美元买 Hugging Face</span><span class="one">双方未确认，协议也可能谈崩</span></span></a></td>
+          <td class="sec"><a href="#i10">业界</a></td>
+          <td class="ttl"><a href="#i10">Nvidia 据报 129 亿美元买 Hugging Face</a></td>
+          <td class="one"><a href="#i10">双方未确认，协议也可能谈崩</a></td>
         </tr>
         <tr>
-          <td><a href="#i11"><span class="sec">业界</span><span><span class="ttl">Google 拟 2.6 亿英镑和解 Play 诉讼</span><span class="one">英国开发者集体诉讼，尚待法庭批准</span></span></a></td>
+          <td class="sec"><a href="#i11">业界</a></td>
+          <td class="ttl"><a href="#i11">Google 拟 2.6 亿英镑和解 Play 诉讼</a></td>
+          <td class="one"><a href="#i11">英国开发者集体诉讼，尚待法庭批准</a></td>
         </tr>
         <tr>
-          <td><a href="#i12"><span class="sec">业界</span><span><span class="ttl">苹果 9 月 9 日 Surprise and shine</span><span class="one">Ternus 接任后第一场发布会，产品名单未官宣</span></span></a></td>
+          <td class="sec"><a href="#i12">业界</a></td>
+          <td class="ttl"><a href="#i12">苹果 9 月 9 日 Surprise and shine</a></td>
+          <td class="one"><a href="#i12">Ternus 接任后第一场发布会，产品名单未官宣</a></td>
         </tr>
         <tr>
-          <td><a href="#i13"><span class="sec">业界</span><span><span class="ttl">Android 17 四项网络安全</span><span class="one">ECH、本地网络权限、证书透明、运营商可关 2G</span></span></a></td>
+          <td class="sec"><a href="#i13">业界</a></td>
+          <td class="ttl"><a href="#i13">Android 17 四项网络安全</a></td>
+          <td class="one"><a href="#i13">ECH、本地网络权限、证书透明、运营商可关 2G</a></td>
         </tr>
         <tr>
-          <td><a href="#i14"><span class="sec">业界</span><span><span class="ttl">搜索 AI Mode 能盯机票并订酒店</span><span class="one">价格追踪、里程报价，美国英语可直接订酒店</span></span></a></td>
+          <td class="sec"><a href="#i14">业界</a></td>
+          <td class="ttl"><a href="#i14">搜索 AI Mode 能盯机票并订酒店</a></td>
+          <td class="one"><a href="#i14">价格追踪、里程报价，美国英语可直接订酒店</a></td>
         </tr>
         <tr>
-          <td><a href="#i15"><span class="sec">抗衰</span><span><span class="ttl">肠道分泌磷酸酶 ACP7 才延寿</span><span class="one">线虫过表达且分泌出去，寿命才会延长</span></span></a></td>
+          <td class="sec"><a href="#i15">抗衰</a></td>
+          <td class="ttl"><a href="#i15">肠道分泌磷酸酶 ACP7 才延寿</a></td>
+          <td class="one"><a href="#i15">线虫过表达且分泌出去，寿命才会延长</a></td>
         </tr>
         <tr>
-          <td><a href="#i16"><span class="sec">抗衰</span><span><span class="ttl">SGLT2 抑制剂心脏靶点是 PANK1</span><span class="one">提高辅酶 A 合成和心肌收缩，不是靠心脏里的 SGLT2</span></span></a></td>
+          <td class="sec"><a href="#i16">抗衰</a></td>
+          <td class="ttl"><a href="#i16">SGLT2 抑制剂心脏靶点是 PANK1</a></td>
+          <td class="one"><a href="#i16">提高辅酶 A 合成和心肌收缩，不是靠心脏里的 SGLT2</a></td>
         </tr>
         <tr>
-          <td><a href="#i17"><span class="sec">抗衰</span><span><span class="ttl">累积衰弱预测认知下降与死亡</span><span class="one">比单次衰弱评分更能预示痴呆和全因死亡</span></span></a></td>
+          <td class="sec"><a href="#i17">抗衰</a></td>
+          <td class="ttl"><a href="#i17">累积衰弱预测认知下降与死亡</a></td>
+          <td class="one"><a href="#i17">比单次衰弱评分更能预示痴呆和全因死亡</a></td>
         </tr>
         </tbody>
       </table>
