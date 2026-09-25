@@ -500,6 +500,9 @@ def render_page(page_num, total_pages, page_entries, newest_href):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)}</title>
   <meta name="description" content="每日简报归档：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <style>
 {CSS}
   </style>
