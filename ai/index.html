@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 前沿情报日报 · 归档</title>
+  <meta name="description" content="AI 前沿情报日报归档。">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <style>
+
+    :root {
+      --bg: #f3f5f8;
+      --bg-accent: #e8eef6;
+      --paper: #ffffff;
+      --ink: #1a1f2e;
+      --muted: #5a6478;
+      --line: #d8dee9;
+      --line-soft: #e8edf4;
+      --accent: #3b6d9a;
+      --accent-soft: rgba(59, 109, 154, 0.12);
+      --link: #2a5f8f;
+      --link-hover: #1a4068;
+      --nav-bg: rgba(255, 255, 255, 0.86);
+      --shadow: 0 1px 2px rgba(26, 31, 46, 0.04), 0 4px 16px rgba(26, 31, 46, 0.04);
+      --radius: 12px;
+      --sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB",
+               "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC",
+               "Noto Serif CJK SC", Georgia, serif;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 16.5px; scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh; color: var(--ink); font-family: var(--serif);
+      line-height: 1.75;
+      background:
+        linear-gradient(180deg, var(--bg-accent) 0%, transparent 280px),
+        linear-gradient(90deg, rgba(59, 109, 154, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(59, 109, 154, 0.03) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      background-attachment: fixed;
+    }
+    a { color: var(--link); text-decoration: none; }
+    a:hover { color: var(--link-hover); text-decoration: underline; }
+    .topnav {
+      position: sticky; top: 0; z-index: 40;
+      backdrop-filter: saturate(1.2) blur(10px);
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .topnav-inner {
+      width: min(860px, calc(100% - 3rem)); margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; min-height: 3.1rem; font-family: var(--sans);
+    }
+    .brand { font-weight: 650; color: var(--ink); letter-spacing: 0.02em; text-decoration: none; }
+    .brand:hover { color: var(--accent); text-decoration: none; }
+    .nav-links { display: flex; gap: 0.15rem; list-style: none; margin: 0; padding: 0; flex-wrap: wrap; }
+    .nav-links a {
+      display: inline-block; padding: 0.35rem 0.65rem; border-radius: 999px;
+      color: var(--muted); font-size: 0.88rem; text-decoration: none;
+    }
+    .nav-links a:hover { color: var(--ink); background: var(--accent-soft); text-decoration: none; }
+    .nav-links a[aria-current="page"] { color: var(--accent); background: var(--accent-soft); font-weight: 600; }
+    .wrap { width: min(860px, calc(100% - 3rem)); margin: 0 auto; padding: 1.75rem 0 3.5rem; }
+    .mast { margin: 0.5rem 0 1.5rem; }
+    .mast h1 { margin: 0; font-size: 1.85rem; letter-spacing: 0.02em; font-family: var(--sans); }
+    .mast .meta { margin: 0.45rem 0 0; color: var(--muted); font-size: 0.92rem; font-family: var(--sans); }
+    .lede {
+      background: var(--paper); border: 1px solid var(--line-soft); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.1rem 1.25rem; margin: 0 0 1.5rem;
+    }
+    .lede p { margin: 0; }
+    h2 {
+      margin: 2rem 0 0.85rem; font-size: 1.15rem; font-family: var(--sans);
+      letter-spacing: 0.04em; color: var(--accent);
+      border-bottom: 1px solid var(--line-soft); padding-bottom: 0.4rem;
+    }
+    .card {
+      background: var(--paper); border: 1px solid var(--line-soft); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1.15rem 1.25rem; margin: 0 0 1rem;
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--accent); opacity: 0.55;
+    }
+    .card h3 { margin: 0 0 0.75rem; font-size: 1.05rem; font-family: var(--sans); line-height: 1.45; }
+    .badge {
+      display: inline-block; margin-left: 0.35rem; padding: 0.1rem 0.45rem;
+      border-radius: 999px; font-size: 0.72rem; font-weight: 600; font-family: var(--sans);
+      background: var(--accent-soft); color: var(--accent); vertical-align: middle;
+    }
+    .field { margin: 0.55rem 0; }
+    .field .lab {
+      display: block; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: none;
+      color: var(--muted); font-family: var(--sans); margin-bottom: 0.15rem;
+    }
+    .field p { margin: 0; }
+    ul { margin: 0.4rem 0 0.4rem 1.2rem; padding: 0; }
+    li { margin: 0.25rem 0; }
+    .site-footer {
+      margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--line-soft);
+      color: var(--muted); font-size: 0.85rem; font-family: var(--sans);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .mast, .lede, .card { animation: rise 0.55s ease both; }
+      .card:nth-of-type(2) { animation-delay: 0.04s; }
+      .card:nth-of-type(3) { animation-delay: 0.08s; }
+      @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    }
+    @media (max-width: 640px) {
+      .topnav-inner { width: calc(100% - 1.5rem); }
+      .wrap { width: calc(100% - 1.5rem); }
+      .mast h1 { font-size: 1.5rem; }
+      .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+    }
+
+    .card-link {
+      display: flex; flex-direction: column; gap: 0.25rem;
+      background: var(--paper); border: 1px solid var(--line-soft); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 1rem 1.15rem; margin: 0 0 0.75rem;
+      text-decoration: none; color: inherit; font-family: var(--sans);
+    }
+    .card-link:hover { border-color: var(--accent); text-decoration: none; }
+    .card-link .d { color: var(--muted); font-size: 0.85rem; }
+    .card-link .t { color: var(--ink); font-weight: 600; }
+
+  </style>
+</head>
+<body>
+  <nav class="topnav" aria-label="主导航">
+    <div class="topnav-inner">
+      <a class="brand" href="/">每日简报</a>
+      <ul class="nav-links">
+        <li><a href="/">首页</a></li>
+        <li><a href="/2026/2026-09-25.html">最新一期</a></li>
+        <li><a href="/ai/" aria-current="page">AI 日报</a></li>
+        <li><a href="/">归档</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="wrap">
+    <header class="mast">
+      <h1>AI 前沿情报日报</h1>
+      <p class="meta">独立栏目 · 工作日更新 · 事实与推断分开</p>
+    </header>
+      <p class="meta">暂无日报。</p>
+    <footer class="site-footer">
+      <p><a href="/">返回综合每日简报</a></p>
+    </footer>
+  </div>
+</body>
+</html>

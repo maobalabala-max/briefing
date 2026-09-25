@@ -514,6 +514,7 @@ def render_page(page_num, total_pages, page_entries, newest_href):
       <ul class="nav-links">
         <li><a href="/"{home_current}>首页</a></li>
         <li><a href="{html.escape(newest_href)}">最新一期</a></li>
+        <li><a href="/ai/">AI 日报</a></li>
         <li><a href="/"{archive_current}>归档</a></li>
       </ul>
     </div>
