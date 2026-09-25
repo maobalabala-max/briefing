@@ -52,10 +52,29 @@ CSS = """
       position: sticky;
       top: 0;
       z-index: 40;
+      isolation: isolate;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       background: var(--nav-bg);
       border-bottom: 1px solid var(--line-soft);
+    }
+    .topnav::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(59, 109, 154, 0.18) 20%,
+        rgba(59, 109, 154, 0.52) 50%,
+        rgba(59, 109, 154, 0.18) 80%,
+        transparent 100%
+      );
+      opacity: 0.5;
+      pointer-events: none;
     }
     .topnav-inner {
       width: min(1040px, calc(100% - 2.5rem));
@@ -161,6 +180,7 @@ CSS = """
     .archive li { margin: 0; }
     .archive a.card {
       display: block;
+      position: relative;
       text-decoration: none;
       color: var(--ink);
       background: var(--paper);
@@ -168,14 +188,34 @@ CSS = """
       border-radius: var(--radius);
       padding: 1.1rem 1.2rem 1.15rem;
       box-shadow: var(--shadow);
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
       height: 100%;
+    }
+    .archive a.card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1rem;
+      bottom: 1rem;
+      width: 2px;
+      border-radius: 0 2px 2px 0;
+      background: var(--accent);
+      opacity: 0;
+      transform: scaleY(0);
+      transform-origin: center;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
     }
     .archive a.card:hover {
       border-color: #b8c5d8;
       box-shadow: 0 2px 4px rgba(26, 31, 46, 0.05), 0 8px 24px rgba(26, 31, 46, 0.07);
       transform: translateY(-1px);
       color: var(--ink);
+    }
+    .archive a.card:hover::before,
+    .archive a.card:focus-visible::before {
+      opacity: 0.9;
+      transform: scaleY(1);
     }
     .archive .when {
       font-family: var(--sans);
@@ -262,6 +302,50 @@ CSS = """
       text-align: center;
     }
     .site-footer p { margin: 0; }
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes archive-fade-rise {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes nav-line-shimmer {
+        0%, 100% { background-position: 0% 50%; opacity: 0.28; }
+        50% { background-position: 100% 50%; opacity: 0.52; }
+      }
+      header.mast {
+        animation: archive-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .month-group {
+        animation: archive-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .month-group:nth-child(1) { animation-delay: 0.12s; }
+      .month-group:nth-child(2) { animation-delay: 0.2s; }
+      .month-group:nth-child(3) { animation-delay: 0.28s; }
+      .month-group:nth-child(n + 4) { animation-delay: 0.36s; }
+      .archive li {
+        animation: archive-fade-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .archive li:nth-child(1) { animation-delay: 0.22s; }
+      .archive li:nth-child(2) { animation-delay: 0.27s; }
+      .archive li:nth-child(3) { animation-delay: 0.32s; }
+      .archive li:nth-child(4) { animation-delay: 0.37s; }
+      .archive li:nth-child(5) { animation-delay: 0.42s; }
+      .archive li:nth-child(6) { animation-delay: 0.47s; }
+      .archive li:nth-child(7) { animation-delay: 0.52s; }
+      .archive li:nth-child(8) { animation-delay: 0.57s; }
+      .archive li:nth-child(n + 9) { animation-delay: 0.62s; }
+      .topnav::after {
+        background-size: 200% 100%;
+        animation: nav-line-shimmer 10s ease-in-out infinite;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .topnav::after,
+      header.mast,
+      .month-group,
+      .archive li {
+        animation: none !important;
+      }
+    }
     @media (max-width: 520px) {
       .topnav-inner { width: calc(100% - 1.5rem); }
       .wrap { width: calc(100% - 1.5rem); padding-top: 1.5rem; }
@@ -406,6 +490,8 @@ def render_page(page_num, total_pages, page_entries, newest_href):
     title = "每日简报" if page_num == 1 else f"每日简报 · 第 {page_num} 页"
     cards_html = render_cards(page_entries)
     pager_html = render_pager(page_num, total_pages)
+    home_current = ' aria-current="page"' if page_num == 1 else ""
+    archive_current = ' aria-current="page"' if page_num > 1 else ""
 
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -423,9 +509,9 @@ def render_page(page_num, total_pages, page_entries, newest_href):
     <div class="topnav-inner">
       <a class="brand" href="/index.html">每日简报</a>
       <ul class="nav-links">
-        <li><a href="/index.html" aria-current="page">首页</a></li>
+        <li><a href="/index.html"{home_current}>首页</a></li>
         <li><a href="{html.escape(newest_href)}">最新一期</a></li>
-        <li><a href="/index.html">归档</a></li>
+        <li><a href="/index.html"{archive_current}>归档</a></li>
       </ul>
     </div>
   </nav>
