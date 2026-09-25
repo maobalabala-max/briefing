@@ -122,17 +122,26 @@
       margin: 0 0 0.55rem; font-size: 0.78rem; letter-spacing: 0.08em;
       color: var(--muted); font-weight: 600;
     }
-    .toc ol {
-      margin: 0; padding: 0 0 0 1.15rem; columns: 1;
+    .toc > ol {
+      margin: 0; padding: 0 0 0 1.15rem; list-style: decimal;
     }
-    .toc li { margin: 0.28rem 0; break-inside: avoid; font-size: 0.92rem; line-height: 1.45; }
-    .toc a { color: var(--ink); text-decoration: none; }
-    .toc a:hover { color: var(--accent); text-decoration: underline; }
-    .toc .toc-sub { color: var(--muted); font-size: 0.88rem; }
+    .toc > ol > li {
+      margin: 0.45rem 0; font-size: 0.95rem; line-height: 1.45; font-weight: 600;
+      color: var(--ink);
+    }
+    .toc > ol > li > a { color: var(--ink); text-decoration: none; }
+    .toc > ol > li > a:hover { color: var(--accent); text-decoration: underline; }
+    .toc ol ol {
+      margin: 0.35rem 0 0.15rem; padding: 0 0 0 1.05rem;
+      list-style: disc; font-weight: 400;
+    }
+    .toc ol ol li {
+      margin: 0.22rem 0; font-size: 0.86rem; line-height: 1.4; font-weight: 400;
+      color: var(--muted);
+    }
+    .toc ol ol a { color: var(--muted); text-decoration: none; }
+    .toc ol ol a:hover { color: var(--accent); text-decoration: underline; }
     h2[id], .card[id] { scroll-margin-top: 4.2rem; }
-    @media (min-width: 720px) {
-      .toc ol { columns: 2; column-gap: 1.5rem; }
-    }
     @media (max-width: 640px) {
       .topnav-inner { width: calc(100% - 1.5rem); }
       .wrap { width: calc(100% - 1.5rem); }
