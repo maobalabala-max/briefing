@@ -6,97 +6,246 @@
   <title>每日简报 · 2026年9月8日</title>
   <style>
     :root {
-      --bg: #f4f1ea;
-      --paper: #fcfaf6;
-      --ink: #1c1915;
-      --muted: #5c564c;
-      --line: #e4ddd2;
-      --accent: #8b4513;
-      --accent-soft: #f3e6d6;
-      --link: #1f4e79;
-      --link-hover: #0d2f4f;
-      --chip: #efe8dc;
-      --s1: #7a3e12;
-      --s2: #1e4d3a;
-      --s3: #1f3d6b;
-      --s4: #6b2d4a;
+      --bg: #f3f5f8;
+      --bg-accent: #e8eef6;
+      --paper: #ffffff;
+      --ink: #1a1f2e;
+      --muted: #5a6478;
+      --line: #d8dee9;
+      --line-soft: #e8edf4;
+      --accent: #3b6d9a;
+      --accent-soft: rgba(59, 109, 154, 0.12);
+      --link: #2a5f8f;
+      --link-hover: #1a4068;
+      --nav-bg: rgba(255, 255, 255, 0.86);
+      --chip: #e8eef6;
+      --shadow: 0 1px 2px rgba(26, 31, 46, 0.04), 0 4px 16px rgba(26, 31, 46, 0.04);
+      --radius: 12px;
+      --sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB",
+               "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC",
+               "Noto Serif CJK SC", Georgia, serif;
+      --s1: #3b6d9a;
+      --s2: #2f6b5c;
+      --s3: #4a5f8a;
+      --s4: #5a4a6b;
     }
     * { box-sizing: border-box; }
-    html { font-size: 17px; }
+    html { font-size: 16.5px; scroll-behavior: smooth; }
     body {
       margin: 0;
-      background: var(--bg);
+      min-height: 100vh;
       color: var(--ink);
-      font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Songti SC", "Noto Serif SC", "Source Han Serif SC", "Noto Serif CJK SC", Georgia, serif;
+      font-family: var(--serif);
       line-height: 1.7;
+      background:
+        linear-gradient(180deg, var(--bg-accent) 0%, transparent 280px),
+        linear-gradient(90deg, rgba(59, 109, 154, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(59, 109, 154, 0.03) 1px, transparent 1px),
+        var(--bg);
+      background-size: auto, 28px 28px, 28px 28px, auto;
+      background-attachment: fixed;
+    }
+    .topnav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      isolation: isolate;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--line-soft);
+    }
+    .topnav::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(59, 109, 154, 0.18) 20%,
+        rgba(59, 109, 154, 0.52) 50%,
+        rgba(59, 109, 154, 0.18) 80%,
+        transparent 100%
+      );
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .topnav-inner {
+      width: min(1040px, calc(100% - 2.5rem));
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.72rem 0;
+      font-family: var(--sans);
+    }
+    .brand {
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .brand:hover { color: var(--link); }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.15rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      display: inline-block;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.84rem;
+      transition: color 0.15s ease, background 0.15s ease;
+    }
+    .nav-links a:hover,
+    .nav-links a[aria-current="page"] {
+      color: var(--ink);
+      background: var(--accent-soft);
     }
     .wrap {
-      width: min(1080px, calc(100% - 3rem));
-      max-width: 1080px;
+      width: min(1040px, calc(100% - 2.5rem));
       margin: 0 auto;
-      padding: 2.2rem 0 4rem;
+      padding: 2rem 0 3.5rem;
     }
     header.mast {
-      border-bottom: 2px solid var(--ink);
-      padding-bottom: 1.35rem;
       margin-bottom: 1.75rem;
+      padding: 0.4rem 0 1.35rem;
+      border-bottom: 1px solid var(--line);
+      position: relative;
+    }
+    header.mast::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 4.5rem;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
     }
     h1 {
-      font-size: 2.05rem;
-      line-height: 1.2;
-      margin: 0 0 0.55rem;
+      font-family: var(--sans);
+      font-size: clamp(1.75rem, 4vw, 2.15rem);
+      line-height: 1.25;
+      margin: 0 0 0.5rem;
       font-weight: 700;
       letter-spacing: -0.02em;
+      color: var(--ink);
     }
     h1 a.home {
       color: inherit;
       text-decoration: none;
     }
     h1 a.home:hover {
-      border-bottom: 1px solid currentColor;
+      color: var(--link);
     }
     .meta {
-      font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
-      font-size: 0.86rem;
+      font-family: var(--sans);
+      font-size: 0.88rem;
       color: var(--muted);
       margin: 0;
+      max-width: 36em;
     }
     .lede {
       background: var(--paper);
-      border: 1px solid var(--line);
-      padding: 1.05rem 1.15rem;
-      margin: 0 0 2.1rem;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      padding: 1.05rem 1.2rem;
+      margin: 0 0 2rem;
       font-size: 0.98rem;
+      box-shadow: var(--shadow);
     }
-    section { margin-bottom: 2.6rem; }
+    section { margin-bottom: 2.4rem; }
     h2 {
-      font-size: 1.28rem;
-      margin: 0 0 1.05rem;
-      padding: 0.55rem 0 0.5rem;
-      border-top: 3px solid var(--ink);
+      font-family: var(--sans);
+      font-size: 1.2rem;
+      margin: 0 0 1rem;
+      padding: 0.45rem 0 0.55rem;
+      border-top: none;
       border-bottom: 1px solid var(--line);
+      position: relative;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+    }
+    h2::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 2.75rem;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px;
     }
     article.item {
+      position: relative;
       background: var(--paper);
-      border: 1px solid var(--line);
-      padding: 1.05rem 1.1rem 1.15rem;
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem 1.15rem;
       margin: 0 0 0.95rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+      scroll-margin-top: 4.5rem;
+    }
+    article.item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1rem;
+      bottom: 1rem;
+      width: 2px;
+      border-radius: 0 2px 2px 0;
+      background: var(--accent);
+      opacity: 0;
+      transform: scaleY(0);
+      transform-origin: center;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      pointer-events: none;
+    }
+    article.item:hover {
+      border-color: #b8c5d8;
+      box-shadow: 0 2px 4px rgba(26, 31, 46, 0.05), 0 8px 24px rgba(26, 31, 46, 0.07);
+      transform: translateY(-1px);
+    }
+    article.item:hover::before,
+    article.item:focus-within::before {
+      opacity: 0.9;
+      transform: scaleY(1);
+    }
+    article.item:target {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
     }
     article.item h3 {
-      font-size: 1.08rem;
+      font-family: var(--sans);
+      font-size: 1.06rem;
       line-height: 1.35;
       margin: 0 0 0.55rem;
       font-weight: 700;
+      letter-spacing: -0.01em;
     }
     .orig {
       font-style: italic;
       color: var(--muted);
       font-size: 0.9rem;
       margin: -0.25rem 0 0.55rem;
-      font-family: Georgia, "Iowan Old Style", serif;
+      font-family: Georgia, "Iowan Old Style", var(--serif);
     }
     .authors {
-      font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+      font-family: var(--sans);
       font-size: 0.8rem;
       color: var(--muted);
       margin: 0 0 0.55rem;
@@ -104,7 +253,7 @@
     p { margin: 0 0 0.7rem; }
     p:last-of-type { margin-bottom: 0.85rem; }
     .src {
-      font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+      font-family: var(--sans);
       font-size: 0.78rem;
       color: var(--muted);
       display: flex;
@@ -124,29 +273,35 @@
     .chip {
       display: inline-block;
       background: var(--chip);
-      padding: 0.05rem 0.4rem;
-      border-radius: 2px;
+      color: var(--muted);
+      padding: 0.08rem 0.45rem;
+      border-radius: 6px;
       font-size: 0.72rem;
       letter-spacing: 0.04em;
+      border: 1px solid var(--line-soft);
     }
     footer {
-      border-top: 1px solid var(--ink);
+      border-top: 1px solid var(--line-soft);
       padding-top: 1rem;
-      font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+      font-family: var(--sans);
       font-size: 0.78rem;
       color: var(--muted);
     }
-    html { scroll-behavior: smooth; }
-    article.item { scroll-margin-top: 1.2rem; }
-    article.item:target { outline: 2px solid var(--ink); outline-offset: 2px; }
-    .digest-wrap { margin: 0 0 2.2rem; }
+    .digest-wrap {
+      margin: 0 0 2.1rem;
+      background: var(--paper);
+      border: 1px solid var(--line-soft);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
     table.digest {
       width: 100%;
       border-collapse: collapse;
       table-layout: fixed;
-      background: var(--paper);
-      border: 1px solid var(--line);
-      font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Noto Sans SC", sans-serif;
+      background: transparent;
+      border: none;
+      font-family: var(--sans);
       font-size: 0.86rem;
     }
     table.digest th {
@@ -155,18 +310,21 @@
       font-size: 0.72rem;
       letter-spacing: 0.08em;
       color: var(--muted);
-      padding: 0.5rem 0.85rem;
-      border-bottom: 2px solid var(--ink);
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg-accent);
     }
     table.digest td {
-      padding: 0.55rem 0.85rem;
-      border-bottom: 1px solid var(--line);
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid var(--line-soft);
       vertical-align: top;
       line-height: 1.45;
     }
     table.digest tr:last-child td { border-bottom: none; }
+    table.digest tbody tr { transition: background 0.15s ease; }
     table.digest tbody tr:hover { background: var(--accent-soft); }
     table.digest a { color: inherit; text-decoration: none; }
+    table.digest a:hover { color: var(--link); }
     table.digest .sec {
       width: 4.6rem;
       color: var(--muted);
@@ -176,6 +334,52 @@
     }
     table.digest .ttl { width: 38%; font-weight: 650; }
     table.digest .one { color: var(--muted); font-weight: 400; }
+    @media (prefers-reduced-motion: no-preference) {
+      @keyframes briefing-fade-rise {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes nav-line-shimmer {
+        0%, 100% { background-position: 0% 50%; opacity: 0.28; }
+        50% { background-position: 100% 50%; opacity: 0.52; }
+      }
+      header.mast {
+        animation: briefing-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .lede {
+        animation: briefing-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+      }
+      .digest-wrap {
+        animation: briefing-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.14s both;
+      }
+      section {
+        animation: briefing-fade-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      section:nth-of-type(1) { animation-delay: 0.2s; }
+      section:nth-of-type(2) { animation-delay: 0.26s; }
+      section:nth-of-type(3) { animation-delay: 0.32s; }
+      section:nth-of-type(4) { animation-delay: 0.38s; }
+      section:nth-of-type(n + 5) { animation-delay: 0.42s; }
+      .topnav::after {
+        background-size: 200% 100%;
+        animation: nav-line-shimmer 10s ease-in-out infinite;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .topnav::after,
+      header.mast,
+      .lede,
+      .digest-wrap,
+      section {
+        animation: none !important;
+      }
+      article.item {
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      article.item:hover {
+        transform: none;
+      }
+    }
     @media (max-width: 720px) {
       table.digest, table.digest thead, table.digest tbody, table.digest tr, table.digest th, table.digest td {
         display: block;
@@ -188,11 +392,25 @@
     @media (max-width: 560px) {
       html { font-size: 16px; }
       h1 { font-size: 1.7rem; }
-      .wrap { width: calc(100% - 2rem); padding: 1.4rem 0 3rem; }
+      .topnav-inner { width: calc(100% - 1.5rem); }
+      .wrap { width: calc(100% - 1.5rem); padding: 1.5rem 0 3rem; }
+      .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
+      article.item { padding: 1rem; }
     }
   </style>
 </head>
 <body>
+  <nav class="topnav" aria-label="主导航">
+    <div class="topnav-inner">
+      <a class="brand" href="/index.html">每日简报</a>
+      <ul class="nav-links">
+        <li><a href="/index.html">首页</a></li>
+        <li><a href="/2026/2026-09-25.html">最新一期</a></li>
+        <li><a href="/index.html">归档</a></li>
+      </ul>
+    </div>
+  </nav>
+
   <div class="wrap">
     <header class="mast">
       <h1><a class="home" href="/">每日简报</a></h1>
