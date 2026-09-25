@@ -1,17 +1,12 @@
-#!/usr/bin/env python3
-"""Regenerate archive index pages from dated briefing files YYYY/YYYY-MM-DD.html."""
-from pathlib import Path
-import math
-import re
-import html
-import datetime
-import shutil
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>每日简报 · 第 2 页</title>
+  <meta name="description" content="每日简报归档：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。">
+  <style>
 
-ROOT = Path(__file__).resolve().parent
-WEEKDAY = "一二三四五六日"
-PER_PAGE = 14  # ~12–16 entries per page
-
-CSS = """
     :root {
       --bg: #f3f5f8;
       --bg-accent: #e8eef6;
@@ -268,154 +263,7 @@ CSS = """
       .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
       .archive a.card { padding: 1rem; }
     }
-"""
 
-
-def collect_entries():
-    entries = []
-    for path in sorted(
-        ROOT.glob("[0-9][0-9][0-9][0-9]/[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].html"),
-        reverse=True,
-    ):
-        date_s = path.stem
-        dt = datetime.date.fromisoformat(date_s)
-        text = path.read_text(encoding="utf-8")
-        lede_m = re.search(r'<p class="lede">(.*?)</p>', text, re.S)
-        lede = re.sub("<[^>]+>", "", lede_m.group(1) if lede_m else "")
-        lede = html.unescape(re.sub(r"\s+", " ", lede)).strip()
-        year = path.parent.name
-        entries.append({
-            "href": f"/{year}/{path.name}",
-            "iso": date_s,
-            "dt": dt,
-            "label": f"{dt.year}年{dt.month}月{dt.day}日",
-            "dow": f"周{WEEKDAY[dt.weekday()]}",
-            "month_key": (dt.year, dt.month),
-            "month_label": f"{dt.year}年{dt.month}月",
-            "lede": lede,
-        })
-    return entries
-
-
-def render_cards(page_entries):
-    """Group entries by month and render HTML sections."""
-    sections = []
-    current_key = None
-    items = []
-
-    def flush():
-        nonlocal items, current_key
-        if not items:
-            return
-        month_label = items[0]["month_label"]
-        cards = []
-        for e in items:
-            blurb_src = e["lede"]
-            blurb = html.escape(blurb_src[:220] + ("…" if len(blurb_src) > 220 else ""))
-            cards.append(
-                "        <li>\n"
-                f'          <a class="card" href="{e["href"]}">\n'
-                f'            <p class="when">{e["label"]} · {e["dow"]}</p>\n'
-                f'            <p class="title">{e["label"]} 简报</p>\n'
-                f'            <p class="blurb">{blurb}</p>\n'
-                "          </a>\n"
-                "        </li>"
-            )
-        sections.append(
-            f'      <section class="month-group" aria-label="{month_label}">\n'
-            f'        <h2 class="month-label">{month_label}</h2>\n'
-            f'        <ol class="archive">\n'
-            + "\n".join(cards)
-            + "\n        </ol>\n"
-            "      </section>"
-        )
-        items = []
-
-    for e in page_entries:
-        if e["month_key"] != current_key:
-            flush()
-            current_key = e["month_key"]
-        items.append(e)
-    flush()
-    return "\n".join(sections)
-
-
-def page_href(page_num):
-    if page_num <= 1:
-        return "/index.html"
-    return f"/page/{page_num}.html"
-
-
-def render_pager(page_num, total_pages):
-    if total_pages <= 1:
-        return ""
-
-    parts = []
-    # Prev
-    if page_num > 1:
-        parts.append(
-            f'<a class="nav-btn" href="{page_href(page_num - 1)}" rel="prev">上一页</a>'
-        )
-    else:
-        parts.append('<span class="nav-btn disabled" aria-disabled="true">上一页</span>')
-
-    # Page numbers (show all if small; else window)
-    window = 7
-    if total_pages <= window:
-        page_range = range(1, total_pages + 1)
-    else:
-        start = max(1, page_num - 2)
-        end = min(total_pages, start + window - 1)
-        start = max(1, end - window + 1)
-        page_range = range(start, end + 1)
-        if start > 1:
-            parts.append(f'<a href="{page_href(1)}">1</a>')
-            if start > 2:
-                parts.append('<span aria-hidden="true">…</span>')
-
-    for p in page_range:
-        if p == page_num:
-            parts.append(f'<span class="current" aria-current="page">{p}</span>')
-        else:
-            parts.append(f'<a href="{page_href(p)}">{p}</a>')
-
-    if total_pages > window:
-        end = page_range[-1] if page_range else 0
-        if end < total_pages:
-            if end < total_pages - 1:
-                parts.append('<span aria-hidden="true">…</span>')
-            parts.append(f'<a href="{page_href(total_pages)}">{total_pages}</a>')
-
-    # Next
-    if page_num < total_pages:
-        parts.append(
-            f'<a class="nav-btn" href="{page_href(page_num + 1)}" rel="next">下一页</a>'
-        )
-    else:
-        parts.append('<span class="nav-btn disabled" aria-disabled="true">下一页</span>')
-
-    return (
-        '    <nav class="pager" aria-label="分页">\n'
-        + "      "
-        + "\n      ".join(parts)
-        + "\n    </nav>"
-    )
-
-
-def render_page(page_num, total_pages, page_entries, newest_href):
-    title = "每日简报" if page_num == 1 else f"每日简报 · 第 {page_num} 页"
-    cards_html = render_cards(page_entries)
-    pager_html = render_pager(page_num, total_pages)
-
-    return f"""<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{html.escape(title)}</title>
-  <meta name="description" content="每日简报归档：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。">
-  <style>
-{CSS}
   </style>
 </head>
 <body>
@@ -424,7 +272,7 @@ def render_page(page_num, total_pages, page_entries, newest_href):
       <a class="brand" href="/index.html">每日简报</a>
       <ul class="nav-links">
         <li><a href="/index.html" aria-current="page">首页</a></li>
-        <li><a href="{html.escape(newest_href)}">最新一期</a></li>
+        <li><a href="/2026/2026-09-25.html">最新一期</a></li>
         <li><a href="/index.html">归档</a></li>
       </ul>
     </div>
@@ -434,45 +282,88 @@ def render_page(page_num, total_pages, page_entries, newest_href):
       <h1>每日简报</h1>
       <p class="meta">工作日 08:00 更新 · 亚洲/上海 · AI、科学、科技业界、抗衰论文</p>
     </header>
-{cards_html}
-{pager_html}
+      <section class="month-group" aria-label="2026年9月">
+        <h2 class="month-label">2026年9月</h2>
+        <ol class="archive">
+        <li>
+          <a class="card" href="/2026/2026-09-07.html">
+            <p class="when">2026年9月7日 · 周一</p>
+            <p class="title">2026年9月7日 简报</p>
+            <p class="blurb">周末过后的主线仍是「模型周」的余震：Anthropic 的 Fable 5.1 / Mythos 5.1、Google 的 Gemini 3.8 Flash（含防御侧 Cyber）、以及阿布扎比 IFM 全开源舰队 K2 Horizon，都还在消化窗口；CNBC 9 月 6 日干脆把买方跟不上比分牌的现象叫作 model fatigue。独立评测则拆开 Astra 的 ARC-AGI-3：官方适配器 99.9%，中性 harness 约…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-09-04.html">
+            <p class="when">2026年9月4日 · 周五</p>
+            <p class="title">2026年9月4日 简报</p>
+            <p class="blurb">补发周五简报。主线是产品落地与平台并购并行：OpenAI 于 9 月 3 日正式开推 GPT-6 Astra，分阶段进入付费用户与 API；英伟达同日确认以约 129 亿美元收购 Hugging Face，并另推出把家里闲置机器拼成本地推理集群的 PAIR。Google 把语音对话助手放进 Gmail / Docs / Keep，Adobe 把 70 多项创意工具塞进 Slack。科学栏有 tipping 点的 Ruelle–Polli…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-09-03.html">
+            <p class="when">2026年9月3日 · 周四</p>
+            <p class="title">2026年9月3日 简报</p>
+            <p class="blurb">今天的主线是「能打洞」和「能不能盯住推理」同时上台：OpenAI 把 Astra 定为首个 Critical 网络安全能力层，并推迟了部分开发与发布；The Information 随后报道它用了有限的 recurrent depth，安全圈担心链式思维监控被掏空。Google 同日放出 Gemini 3.8 Flash 和只给防御圈的 3.8 Flash Cyber。业界一侧，谷歌广告反垄断没有被拆 AdX，欧盟把 ChatGPT 定…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-09-02.html">
+            <p class="when">2026年9月2日 · 周三</p>
+            <p class="title">2026年9月2日 简报</p>
+            <p class="blurb">今天的主线是「听」与「看」同时升级：Anthropic 放出 Claude Fable 5.1（公开）与 Mythos 5.1（受限），Google 给 Gemini Flash 系加上智能体式视频理解，Meta 则交出第一款实时听感模型 Muse Voice Transcribe。监管一侧，欧盟 AI 法案正式向通用模型提供商发出首批信息要求。科学栏赶上几篇 8 月 31 日预印本：学会多尺度采样来对付受挫自旋、彩色 ERGM，以及量…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-09-01.html">
+            <p class="when">2026年9月1日 · 周二</p>
+            <p class="title">2026年9月1日 简报</p>
+            <p class="blurb">今天是苹果的交接日：Tim Cook 结束 15 年 CEO 任期，硬件工程主管 John Ternus 接棒，9 月 9 日发布会是第一场公开考试。AI 一侧，Anthropic 放出评测越界后的对齐与安全整改长文，OpenAI 则宣布 ChatGPT Ads 年化收入跑到 10 亿美元。数学上，渗流「超临界锐度」被写成一套覆盖所有无限传递图的简单证明。抗衰栏目赶上 Nature Aging 的 PathStAR：用病理切片画出人体 …</p>
+          </a>
+        </li>
+        </ol>
+      </section>
+      <section class="month-group" aria-label="2026年8月">
+        <h2 class="month-label">2026年8月</h2>
+        <ol class="archive">
+        <li>
+          <a class="card" href="/2026/2026-08-31.html">
+            <p class="when">2026年8月31日 · 周一</p>
+            <p class="title">2026年8月31日 简报</p>
+            <p class="blurb">周末过后的主线很硬：OpenAI 公开要把 Cursor 上的自家模型合同在 SpaceX 收购后逐步停掉，并放出 Hugging Face 越狱事件的完整技术报告；同期百余机构联名呼吁「有限窗口内」加强网络防御。Google 把 Gemini 3.5 Transcribe 推到开发者 API。业界一侧，Meta 与近乎全美州检察长达成最高约 180 亿美元青少年安全和解。物理上，spread complexity 被解析到能级间距统计…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-08-28.html">
+            <p class="when">2026年8月28日 · 周五</p>
+            <p class="title">2026年8月28日 简报</p>
+            <p class="blurb">今天的主线是智能体从屏幕走进实验室，评测则开始用密码学把「偷看考题」堵上。Anthropic 放出 Model Hardware Standard 研究预览，让模型通过统一驱动操作显微镜、移液台和机械臂；DeepMind 用机密计算做前沿模型的双盲评测；Gemini Omni 1.1 把视频续写做到可生产。业界一侧，Nvidia 据报以约 129 亿美元买 Hugging Face，Google 用 2.6 亿英镑和解英国 Play 商…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-08-27.html">
+            <p class="when">2026年8月27日 · 周四</p>
+            <p class="title">2026年8月27日 简报</p>
+            <p class="blurb">今天的主线是「能力已经跑到控制前面」。OpenAI 公开了 7 月内部评测里模型绕过沙箱、触及 Hugging Face 的事故报告，同时放出自研推理芯片 Jalapeño 的首批实测；Google 把 Gemini 3.5 Transcribe 做成可调用的语音入口，法律版企业智能体也进入预览。物理一侧，从 SYK 光晶格到原子级双缝、单分子红外反冲，实验把多体混沌与量子探测又推进了一格。抗衰栏目近 48 小时新文偏少，补入 CDK4…</p>
+          </a>
+        </li>
+        <li>
+          <a class="card" href="/2026/2026-08-26.html">
+            <p class="when">2026年8月26日 · 周三</p>
+            <p class="title">2026年8月26日 简报</p>
+            <p class="blurb">今天的主线很清楚：模型开始把「记忆」和「代理」做成默认能力，芯片与端侧硬件则在给本地推理让路。科学一侧，多体量子问题从近藤效应到自旋液体都有可计算、可实验的新进展。抗衰栏目里，肠道菌代谢物、巨噬细胞清扫衰老中性粒细胞、少突胶质细胞 NRF2，以及表观遗传时钟对干预的响应，构成一套偏机制、偏可复现的新证据。</p>
+          </a>
+        </li>
+        </ol>
+      </section>
+    <nav class="pager" aria-label="分页">
+      <a class="nav-btn" href="/index.html" rel="prev">上一页</a>
+      <a href="/index.html">1</a>
+      <span class="current" aria-current="page">2</span>
+      <span class="nav-btn disabled" aria-disabled="true">下一页</span>
+    </nav>
     <footer class="site-footer">
       <p>每日简报 · 按日期归档</p>
     </footer>
   </div>
 </body>
 </html>
-"""
-
-
-def main():
-    entries = collect_entries()
-    total = len(entries)
-    total_pages = max(1, math.ceil(total / PER_PAGE)) if total else 1
-    newest_href = entries[0]["href"] if entries else "/index.html"
-
-    # Clean old page/ directory if present, then recreate when needed
-    page_dir = ROOT / "page"
-    if page_dir.exists():
-        shutil.rmtree(page_dir)
-
-    written = []
-    for page_num in range(1, total_pages + 1):
-        start = (page_num - 1) * PER_PAGE
-        chunk = entries[start : start + PER_PAGE]
-        html_out = render_page(page_num, total_pages, chunk, newest_href)
-        if page_num == 1:
-            out_path = ROOT / "index.html"
-        else:
-            page_dir.mkdir(parents=True, exist_ok=True)
-            out_path = page_dir / f"{page_num}.html"
-        out_path.write_text(html_out, encoding="utf-8")
-        written.append(str(out_path.relative_to(ROOT)))
-
-    print(f"wrote {len(written)} page(s) with {total} entries ({PER_PAGE}/page):")
-    for w in written:
-        print(f"  {w}")
-
-
-if __name__ == "__main__":
-    main()
