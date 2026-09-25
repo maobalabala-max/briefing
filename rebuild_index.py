@@ -426,7 +426,7 @@ def render_cards(page_entries):
 
 def page_href(page_num):
     if page_num <= 1:
-        return "/index.html"
+        return "/"
     return f"/page/{page_num}.html"
 
 
@@ -510,11 +510,11 @@ def render_page(page_num, total_pages, page_entries, newest_href):
 <body>
   <nav class="topnav" aria-label="主导航">
     <div class="topnav-inner">
-      <a class="brand" href="/index.html">每日简报</a>
+      <a class="brand" href="/">每日简报</a>
       <ul class="nav-links">
-        <li><a href="/index.html"{home_current}>首页</a></li>
+        <li><a href="/"{home_current}>首页</a></li>
         <li><a href="{html.escape(newest_href)}">最新一期</a></li>
-        <li><a href="/index.html"{archive_current}>归档</a></li>
+        <li><a href="/"{archive_current}>归档</a></li>
       </ul>
     </div>
   </nav>
@@ -538,7 +538,7 @@ def main():
     entries = collect_entries()
     total = len(entries)
     total_pages = max(1, math.ceil(total / PER_PAGE)) if total else 1
-    newest_href = entries[0]["href"] if entries else "/index.html"
+    newest_href = entries[0]["href"] if entries else "/"
 
     # Clean old page/ directory if present, then recreate when needed
     page_dir = ROOT / "page"
