@@ -563,6 +563,13 @@ def main():
     for w in written:
         print(f"  {w}")
 
+    # SEO/social tags on all pages + feed.xml / sitemap.xml / robots.txt (idempotent)
+    import sys
+    sys.dont_write_bytecode = True
+    sys.path.insert(0, str(ROOT))
+    import build_site_meta
+    build_site_meta.main()
+
 
 if __name__ == "__main__":
     main()
