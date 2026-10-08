@@ -183,3 +183,7 @@ footer summary{cursor:pointer;font-weight:600}
 .links a[aria-current="page"]{color:var(--ink);font-weight:700}
 .idx h1{font-size:1.6rem;letter-spacing:.06em}
 @media (min-width:1080px){.idx .page{grid-template-columns:minmax(0,44rem);gap:0}.idx main{margin:0 auto}}
+/* nav: home brand before the chips on content pages */
+.bar .brand{margin-right:.15rem}
+.bar-in>.chips{flex:1 1 auto;min-width:0}
+@media (max-width:560px){.bar-in{gap:.6rem}.bar .brand{font-size:.84rem;letter-spacing:.04em}body:not(.idx) .links a.opt{display:none}.chip{padding:.16rem .55rem}}

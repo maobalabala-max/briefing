@@ -157,8 +157,10 @@ def dated_pages(dirpath: Path) -> list[Path]:
 
 
 def bar_html(chips: str, links: list[tuple[str, str, bool]], brand: bool = False) -> str:
-    """Sticky top bar: section chips on the left, nav links on the right."""
-    lk = "".join(f'<a href="{html.escape(h)}"{" aria-current=\"page\"" if cur else ""}>{html.escape(t)}</a>'
+    """Sticky top bar: [brand → /] section chips on the left, nav links on the right.
+    The feed link gets class="opt" so it can be hidden on narrow screens (it is also in the footer)."""
+    lk = "".join(f'<a href="{html.escape(h)}"{" class=\"opt\"" if h == "/feed.xml" else ""}'
+                 f'{" aria-current=\"page\"" if cur else ""}>{html.escape(t)}</a>'
                  for t, h, cur in links)
     left = '<a class="brand" href="/">每日简报</a>' if brand else ""
     return (f'<nav class="bar" aria-label="导航"><div class="bar-in">{left}'

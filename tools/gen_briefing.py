@@ -147,7 +147,7 @@ def render(data: dict, site: Path) -> str:
         f'{tag_html(["mouse"])}{tag_html(["cell"])}{tag_html(["human"])}{tag_html(["rct"])} 研究对象与设计（抗衰栏必标）',
         f'{tag_html(["an"])} 编辑判断，不是事实'])
     title = f"每日简报 · {dd.year}年{dd.month}月{dd.day}日"
-    links = [("往期", "/", False), ("AI 日报", ai_href, False), ("订阅", "/feed.xml", False)]
+    links = [("AI 日报", ai_href, False), ("订阅", "/feed.xml", False)]  # 「每日简报」brand → / covers 往期
     return f'''<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -160,7 +160,7 @@ def render(data: dict, site: Path) -> str:
   <link rel="stylesheet" href="{css_href(site)}">
 </head>
 <body class="briefing">
-{bar_html("".join(chips), links)}
+{bar_html("".join(chips), links, brand=True)}
 <div class="page">
   <aside class="rail" aria-label="本期目录"><p class="rail-h">本期目录</p>{rail_html}</aside>
   <main>
@@ -194,7 +194,7 @@ def render(data: dict, site: Path) -> str:
 
 def link_ai_page(site: Path, d: str) -> None:
     """The AI daily usually publishes first and then links to the newest combined page; repoint its
-    「每日简报」/「最新综合简报」links at today's page. Only v2 AI pages are touched."""
+    「当日简报」/「最新综合简报」links at today's page. Only v2 AI pages are touched."""
     ai = site / "ai" / f"{d}.html"
     if not ai.exists():
         return
@@ -202,7 +202,8 @@ def link_ai_page(site: Path, d: str) -> None:
     if 'content="ai-daily-v2"' not in raw:
         return
     href = f"/{d[:4]}/{d}.html"
-    new = re.sub(r'<a href="[^"]*">每日简报</a>', f'<a href="{href}">每日简报</a>', raw, count=1)
+    new = re.sub(r'<a href="(?!/")[^"]*">(?:当日简报|最新简报)</a>', f'<a href="{href}">当日简报</a>', raw, count=1)
+    new = re.sub(r'<a href="(?!/")[^"]*">每日简报</a>', f'<a href="{href}">当日简报</a>', new, count=1)  # pre-nav v2 AI pages
     new = re.sub(r'<a href="[^"]*">最新综合简报</a>', f'<a href="{href}">当日综合简报</a>', new)
     if new != raw:
         ai.write_text(new, encoding="utf-8")
