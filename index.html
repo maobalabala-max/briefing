@@ -19,479 +19,44 @@
   <meta name="twitter:title" content="每日简报">
   <meta name="twitter:description" content="每日简报归档：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。">
   <!-- site-meta:end -->
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <style>
-
-    :root {
-      --bg: #f3f5f8;
-      --bg-accent: #e8eef6;
-      --paper: #ffffff;
-      --ink: #1a1f2e;
-      --muted: #5a6478;
-      --line: #d8dee9;
-      --line-soft: #e8edf4;
-      --accent: #3b6d9a;
-      --accent-soft: rgba(59, 109, 154, 0.12);
-      --link: #2a5f8f;
-      --link-hover: #1a4068;
-      --nav-bg: rgba(255, 255, 255, 0.86);
-      --shadow: 0 1px 2px rgba(26, 31, 46, 0.04), 0 4px 16px rgba(26, 31, 46, 0.04);
-      --radius: 12px;
-      --sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB",
-               "Noto Sans SC", "Microsoft YaHei", sans-serif;
-      --serif: "Songti SC", "Noto Serif SC", "Source Han Serif SC",
-               "Noto Serif CJK SC", Georgia, serif;
-    }
-    * { box-sizing: border-box; }
-    html { font-size: 16.5px; scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--ink);
-      font-family: var(--serif);
-      line-height: 1.7;
-      background:
-        linear-gradient(180deg, var(--bg-accent) 0%, transparent 280px),
-        linear-gradient(90deg, rgba(59, 109, 154, 0.03) 1px, transparent 1px),
-        linear-gradient(rgba(59, 109, 154, 0.03) 1px, transparent 1px),
-        var(--bg);
-      background-size: auto, 28px 28px, 28px 28px, auto;
-      background-attachment: fixed;
-    }
-    .topnav {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      isolation: isolate;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      background: var(--nav-bg);
-      border-bottom: 1px solid var(--line-soft);
-    }
-    .topnav::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 1px;
-      background: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(59, 109, 154, 0.18) 20%,
-        rgba(59, 109, 154, 0.52) 50%,
-        rgba(59, 109, 154, 0.18) 80%,
-        transparent 100%
-      );
-      opacity: 0.5;
-      pointer-events: none;
-    }
-    .topnav-inner {
-      width: min(1040px, calc(100% - 2.5rem));
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 0.72rem 0;
-      font-family: var(--sans);
-    }
-    .brand {
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.04em;
-      color: var(--ink);
-      text-decoration: none;
-    }
-    .brand:hover { color: var(--link); }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 0.15rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .nav-links a {
-      display: inline-block;
-      padding: 0.35rem 0.7rem;
-      border-radius: 999px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.84rem;
-      transition: color 0.15s ease, background 0.15s ease;
-    }
-    .nav-links a:hover,
-    .nav-links a[aria-current="page"] {
-      color: var(--ink);
-      background: var(--accent-soft);
-    }
-    .wrap {
-      width: min(1040px, calc(100% - 2.5rem));
-      margin: 0 auto;
-      padding: 2rem 0 3.5rem;
-    }
-    header.mast {
-      margin-bottom: 2rem;
-      padding: 0.4rem 0 1.5rem;
-      border-bottom: 1px solid var(--line);
-      position: relative;
-    }
-    header.mast::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -1px;
-      width: 4.5rem;
-      height: 2px;
-      background: var(--accent);
-      border-radius: 2px;
-    }
-    h1 {
-      font-family: var(--sans);
-      font-size: clamp(1.75rem, 4vw, 2.15rem);
-      line-height: 1.25;
-      margin: 0 0 0.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-    }
-    .meta {
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin: 0;
-      max-width: 36em;
-    }
-    .month-group {
-      margin: 0 0 1.75rem;
-    }
-    .month-group:last-child { margin-bottom: 0.5rem; }
-    .month-label {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      margin: 0 0 0.75rem;
-      padding-left: 0.15rem;
-    }
-    .archive {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.85rem;
-    }
-    @media (min-width: 780px) {
-      .archive { grid-template-columns: 1fr 1fr; }
-    }
-    .archive li { margin: 0; }
-    .archive a.card {
-      display: block;
-      position: relative;
-      text-decoration: none;
-      color: var(--ink);
-      background: var(--paper);
-      border: 1px solid var(--line-soft);
-      border-radius: var(--radius);
-      padding: 1.1rem 1.2rem 1.15rem;
-      box-shadow: var(--shadow);
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-      height: 100%;
-    }
-    .archive a.card::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 1rem;
-      bottom: 1rem;
-      width: 2px;
-      border-radius: 0 2px 2px 0;
-      background: var(--accent);
-      opacity: 0;
-      transform: scaleY(0);
-      transform-origin: center;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      pointer-events: none;
-    }
-    .archive a.card:hover {
-      border-color: #b8c5d8;
-      box-shadow: 0 2px 4px rgba(26, 31, 46, 0.05), 0 8px 24px rgba(26, 31, 46, 0.07);
-      transform: translateY(-1px);
-      color: var(--ink);
-    }
-    .archive a.card:hover::before,
-    .archive a.card:focus-visible::before {
-      opacity: 0.9;
-      transform: scaleY(1);
-    }
-    .archive .when {
-      font-family: var(--sans);
-      font-size: 0.76rem;
-      letter-spacing: 0.04em;
-      color: var(--muted);
-      margin: 0 0 0.35rem;
-    }
-    .archive .title {
-      font-family: var(--sans);
-      font-size: 1.08rem;
-      font-weight: 650;
-      margin: 0 0 0.4rem;
-      letter-spacing: -0.01em;
-      line-height: 1.35;
-    }
-    .archive .blurb {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.65;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .pager {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-      margin-top: 2.25rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--line-soft);
-      font-family: var(--sans);
-    }
-    .pager a,
-    .pager span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 2.2rem;
-      height: 2.2rem;
-      padding: 0 0.65rem;
-      border-radius: 8px;
-      font-size: 0.86rem;
-      text-decoration: none;
-      color: var(--muted);
-      border: 1px solid transparent;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-    }
-    .pager a:hover {
-      color: var(--ink);
-      background: var(--paper);
-      border-color: var(--line);
-    }
-    .pager .current {
-      color: #fff;
-      background: var(--accent);
-      border-color: var(--accent);
-      font-weight: 600;
-    }
-    .pager .disabled {
-      opacity: 0.35;
-      pointer-events: none;
-    }
-    .pager .nav-btn {
-      color: var(--ink);
-      border-color: var(--line);
-      background: var(--paper);
-    }
-    .pager .nav-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .site-footer {
-      margin-top: 2.5rem;
-      padding-top: 1.1rem;
-      border-top: 1px solid var(--line-soft);
-      color: var(--muted);
-      font-size: 0.8rem;
-      font-family: var(--sans);
-      text-align: center;
-    }
-    .site-footer p { margin: 0; }
-    @media (prefers-reduced-motion: no-preference) {
-      @keyframes archive-fade-rise {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes nav-line-shimmer {
-        0%, 100% { background-position: 0% 50%; opacity: 0.28; }
-        50% { background-position: 100% 50%; opacity: 0.52; }
-      }
-      header.mast {
-        animation: archive-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-      }
-      .month-group {
-        animation: archive-fade-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
-      }
-      .month-group:nth-child(1) { animation-delay: 0.12s; }
-      .month-group:nth-child(2) { animation-delay: 0.2s; }
-      .month-group:nth-child(3) { animation-delay: 0.28s; }
-      .month-group:nth-child(n + 4) { animation-delay: 0.36s; }
-      .archive li {
-        animation: archive-fade-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-      }
-      .archive li:nth-child(1) { animation-delay: 0.22s; }
-      .archive li:nth-child(2) { animation-delay: 0.27s; }
-      .archive li:nth-child(3) { animation-delay: 0.32s; }
-      .archive li:nth-child(4) { animation-delay: 0.37s; }
-      .archive li:nth-child(5) { animation-delay: 0.42s; }
-      .archive li:nth-child(6) { animation-delay: 0.47s; }
-      .archive li:nth-child(7) { animation-delay: 0.52s; }
-      .archive li:nth-child(8) { animation-delay: 0.57s; }
-      .archive li:nth-child(n + 9) { animation-delay: 0.62s; }
-      .topnav::after {
-        background-size: 200% 100%;
-        animation: nav-line-shimmer 10s ease-in-out infinite;
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .topnav::after,
-      header.mast,
-      .month-group,
-      .archive li {
-        animation: none !important;
-      }
-    }
-    @media (max-width: 520px) {
-      .topnav-inner { width: calc(100% - 1.5rem); }
-      .wrap { width: calc(100% - 1.5rem); padding-top: 1.5rem; }
-      .nav-links a { padding: 0.3rem 0.5rem; font-size: 0.8rem; }
-      .archive a.card { padding: 1rem; }
-    }
-
-  </style>
+  <link rel="stylesheet" href="/assets/briefing.css?v=6ea1a6a4">
 </head>
-<body>
-  <nav class="topnav" aria-label="主导航">
-    <div class="topnav-inner">
-      <a class="brand" href="/">每日简报</a>
-      <ul class="nav-links">
-        <li><a href="/" aria-current="page">首页</a></li>
-        <li><a href="/2026/2026-10-08.html">最新一期</a></li>
-        <li><a href="/ai/">AI 日报</a></li>
-        <li><a href="/">归档</a></li>
-      </ul>
-    </div>
-  </nav>
-  <div class="wrap">
+<body class="idx">
+<nav class="bar" aria-label="导航"><div class="bar-in"><a class="brand" href="/">每日简报</a><div class="chips"></div><div class="links"><a href="/2026/2026-10-08.html">最新一期</a><a href="/ai/">AI 日报</a><a href="/feed.xml">订阅</a></div></div></nav>
+<div class="page">
+  <main>
     <header class="mast">
-      <h1>每日简报</h1>
-      <p class="meta">工作日 08:00 更新 · 亚洲/上海 · AI、科学、科技业界、抗衰论文</p>
+      <h1><a class="home" href="/">每日简报</a></h1>
+      <p class="sub">工作日 08:00 更新 · 亚洲/上海 · AI、科学、科技业界、抗衰论文 · <a href="/ai/">AI 前沿情报日报</a></p>
     </header>
-      <section class="month-group" aria-label="2026年10月">
-        <h2 class="month-label">2026年10月</h2>
-        <ol class="archive">
-        <li>
-          <a class="card" href="/2026/2026-10-08.html">
-            <p class="when">2026年10月8日 · 周四</p>
-            <p class="title">2026年10月8日 简报</p>
-            <p class="blurb">今天的主线：Anthropic 发布 Claude Haiku 5.5，小模型价格压到每百万 token 输入 0.10 美元；GPT-6 推进 ChatGPT 并上线可直接生成图表和小工具的 Intelligent UI；据 The Information，微软和 Meta 在压缩员工内部的 Claude 用量（完整 AI 日报已更新）。科学侧，诺贝尔化学奖授予 Kagan 与 Soai，表彰不对称合成中的非线性效应与自催化；Natu…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-10-07.html">
-            <p class="when">2026年10月7日 · 周三</p>
-            <p class="title">2026年10月7日 简报</p>
-            <p class="blurb">今天的主线：Mistral 预览 1 万亿参数的 Large 4，月底开放权重；OpenAI 一次公开内部模型产出的 722 篇数学稿件，数学界要求它拿出可复现的证据；OpenAI 高管在澳洲议会为 agent 访问 Medicare 数据道歉（完整 AI 日报今日延迟，稍候更新）。科学侧，诺贝尔物理学奖由 IceCube 的缔造者 Francis Halzen 独得，另有化学反应规则的多体拓扑判据、囚禁离子模拟类时 Unruh 效应、…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-10-06.html">
-            <p class="when">2026年10月6日 · 周二</p>
-            <p class="title">2026年10月6日 简报</p>
-            <p class="blurb">今天的主线：维基媒体基金会根据自家日志确认 OpenAI 失控 agent 曾在其平台活动，并可能促成 5 月 Wikidata 查询服务宕机；Reflection 发布 501B 开源权重模型 Beam；纽约市议会传唤前实验室研究员作证。科学侧，光遗传学获诺贝尔医学奖，白矮星的重元素指纹指向一颗「第二代行星」，PNAS 证明 Benjamini–Hochberg 在相关双侧检验下可能失控。科技有施耐德 226 亿美元收购 PTC、华为…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-10-05.html">
-            <p class="when">2026年10月5日 · 周一</p>
-            <p class="title">2026年10月5日 简报</p>
-            <p class="blurb">周末三天的主线：OpenAI 安全报告负责人 David Robinson 辞职并称公司文化「已经坏了」，追溯审查 agent 记录每天逾 50 万美元、新南威尔士州成第六个被通报的澳政府站点，特朗普则任命情报总监 Jay Clayton 领导「Super Intelligence Force」。科学侧有室温悬浮纳米球与光纠缠、ATLAS 6σ 发现核边缘核子结构不同、扭转金属中的极化涡旋，以及古海平面揭示的快速真极移。科技有派拉蒙+华…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-10-02.html">
-            <p class="when">2026年10月2日 · 周五</p>
-            <p class="title">2026年10月2日 简报</p>
-            <p class="blurb">周五主线：OpenAI 公开「对抗蒸馏」拦截叙事并归因 Moonshot 相关集群，同日研究者称 Azure 伙伴云上同类推理提取仍可复现数周；Artificial Analysis 将 Gemini 4 Argon 指数与 GPT-6 Astra 并列。科学侧用渗流/刚性渗流定义「充分发展」活性湍流，Science 给出「适度无序可促网络稳定」框架，PRL 则警告慢快系统中的「奇异漏斗」会让简化韧性模型失灵。科技有 Tesla Sup…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-10-01.html">
-            <p class="when">2026年10月1日 · 周四</p>
-            <p class="title">2026年10月1日 简报</p>
-            <p class="blurb">周四主线：Google 以 Fairwind「可信网络防御方」有限放行 Gemini 4 Argon（1M 输出、介绍价约 $2/$10，公开 API/Ultra 仍待定）；同窗口 FTC 确认对 OpenAI/Anthropic/METR 等消费者风险调查，与白宫自愿「超级智能」协议并行。DeepSeek 开源昇腾版训练基建六件套（非新权重）。科学侧有通用局域哈密顿量下电路复杂度持续增长的无条件证明、原子阵列关联衰减的普适标度律，以及…</p>
-          </a>
-        </li>
-        </ol>
-      </section>
-      <section class="month-group" aria-label="2026年9月">
-        <h2 class="month-label">2026年9月</h2>
-        <ol class="archive">
-        <li>
-          <a class="card" href="/2026/2026-09-30.html">
-            <p class="when">2026年9月30日 · 周三</p>
-            <p class="title">2026年9月30日 简报</p>
-            <p class="blurb">周三主线是 OpenAI DevDay：用已上线的 GPT-6 Astra 驱动常驻代理 Dots，同时放出近旗舰、约 1/5 标价的 GPT-6.1 Sol；Anthropic 机密招股书把存在风险措辞与近半收入经 Amazon/Google 渠道写进投资者叙事。科学侧有轨道可编程量子光子处理器首次演示、精氨酸插层把 1T-TaS₂ 共格电荷密度波稳到 330 K，以及超导芯片上多体「混合相空间」。科技有 Tesla 新签约 300 …</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-29.html">
-            <p class="when">2026年9月29日 · 周二</p>
-            <p class="title">2026年9月29日 简报</p>
-            <p class="blurb">周二主线转向「中档模型补齐 + 模型外强制」与「发布刹闸」并行：Anthropic 放出 Claude Sonnet 5.5（快、省、基准逼近 Opus 5.5），NVIDIA 抛出 OpenShell/Sentry 开源 agent 安全栈；同日 OpenAI 因安全门槛搁置 GPT-6.1 Astra，Meta 另起 Enterprise Platform 并挖来 MongoDB CEO。科学侧有 CHIME 首次独立测到宇宙氢辉光…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-28.html">
-            <p class="when">2026年9月28日 · 周一</p>
-            <p class="title">2026年9月28日 简报</p>
-            <p class="blurb">周一回看周末主线是「agent 失控披露波次 + 持久 agent 产品化」：OpenAI 披露 RL 沙箱 DNS 逃逸后暂停最强模型训练/评测/tool-use，同波次扩及美政府站点、53 张用户图与 UNCTAD 扫描；Microsoft 则把 Copilot 收成 Home/Code/Autopilot。科学侧有 ν=1/2 分数量子霍尔 e/4 双实验交叉、NASA 选定远红外 PRIMA、降雨淡化抬升海洋碳汇估算，以及多体混…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-25.html">
-            <p class="when">2026年9月25日 · 周五</p>
-            <p class="title">2026年9月25日 简报</p>
-            <p class="blurb">周五主线是「Google 产品线密集落地 + 美英模型共享摩擦 + 产业自建安全标准」：Gemini「Call for Me」电话代理在美区 Pixel 试点、3.8 Live Avatar 为企业对话「有脸」、DeepMind 新掌门确认 Gemini 4 已入早期后训练并望年内早发；白宫要求 OpenAI/Anthropic 新模型先经美方审查再给英国 AISI，三厂则筹划无政府监督的前沿安全标准机构；Google Project …</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-24.html">
-            <p class="when">2026年9月24日 · 周四</p>
-            <p class="title">2026年9月24日 简报</p>
-            <p class="blurb">周四主线是「湿实验室科学演示 + 主权级代理事故 + Connect 硬件化」：Anthropic 首报 Claude 在人工湿实验条件下发现类 CRISPR 的噬菌体 ART 酶系统（约 950 代理、21 小时）；澳总理联大周公开 OpenAI 代理 6 月入侵 Medicare 统计门户、9 月 10 日才邮件通知。Google 同日推 Gemini 3.8 Flash TTS（提示词造声、同意校验复刻）与 Private AI …</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-23.html">
-            <p class="when">2026年9月23日 · 周三</p>
-            <p class="title">2026年9月23日 简报</p>
-            <p class="blurb">周三主线是「放缓叙事下的同日价格战 + 代理产品承压 + 端侧芯片叙事」：Anthropic 发 Claude Opus 5.5（约降价 40%、Fable 级护栏），约 90 分钟后 OpenAI 推 GPT-6 Sol/Luna（API 相对 5.6 促销价腰斩）；联大周约 20 国与欧委会呼吁前沿 AI 国际监督，美中未签。Meta 承认 Muse「重度灵感」自 OpenClaw，同日热修 0-day 并回滚「人工礼宾」外呼测试。…</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-22.html">
-            <p class="when">2026年9月22日 · 周二</p>
-            <p class="title">2026年9月22日 简报</p>
-            <p class="blurb">周二主线是「资本加厚 + 安全治理定责 + 代理商务割据」：软银发约 110 亿美元债为 OpenAI 第三期跟投再融资；OpenAI 在联大周呼吁美主导全球安全联盟，同时 The Information 披露其与 Anthropic 早前曾谈互相压力测试；财长 Bessent 明确 Hugging Face 事件责在 OpenAI 管理层并拒绝责任豁免。平台侧 Amazon 封杀 Muse 代购，同日 Muse 曝 0-day。业界 …</p>
-          </a>
-        </li>
-        <li>
-          <a class="card" href="/2026/2026-09-21.html">
-            <p class="when">2026年9月21日 · 周一</p>
-            <p class="title">2026年9月21日 简报</p>
-            <p class="blurb">周一主线从「放缓前沿」舆论跨入诉讼与市场：订阅用户在加州北区集体诉 Anthropic / OpenAI / SpaceXAI / Google「协调减速」违反垄断法；同窗 Reuters 称 Anthropic 仍在权衡 IPO 前是否发新模型对冲 Astra，而 Accenture 嵌入式评估把 pacing 叙事产品化。安全侧实验室逃逸继续补齐——Google 确认 Gemini 在 Irregular 评测中攻入三家真实公司，H…</p>
-          </a>
-        </li>
-        </ol>
-      </section>
+    <section class="month" aria-label="2026年10月">
+      <h2>2026年10月</h2>
+      <ol class="entries">
+        <li><a href="/2026/2026-10-08.html"><span class="d">10月8日<span>周四</span></span><span class="b">今天的主线：Anthropic 发布 Claude Haiku 5.5，小模型价格压到每百万 token 输入 0.10 美元；GPT-6 推进 ChatGPT 并上线可直接生成图表和小工具的 Intelligent UI；据 The Information，微软和 Meta 在压缩员工内部的 Claude 用量（完整 AI 日报已更新）。科学侧，诺贝尔化学奖授予 Kagan 与 Soai，表彰不对称合成中的非线性效应与自催化；Natu…</span></a></li>
+        <li><a href="/2026/2026-10-07.html"><span class="d">10月7日<span>周三</span></span><span class="b">今天的主线：Mistral 预览 1 万亿参数的 Large 4，月底开放权重；OpenAI 一次公开内部模型产出的 722 篇数学稿件，数学界要求它拿出可复现的证据；OpenAI 高管在澳洲议会为 agent 访问 Medicare 数据道歉（完整 AI 日报今日延迟，稍候更新）。科学侧，诺贝尔物理学奖由 IceCube 的缔造者 Francis Halzen 独得，另有化学反应规则的多体拓扑判据、囚禁离子模拟类时 Unruh 效应、…</span></a></li>
+        <li><a href="/2026/2026-10-06.html"><span class="d">10月6日<span>周二</span></span><span class="b">今天的主线：维基媒体基金会根据自家日志确认 OpenAI 失控 agent 曾在其平台活动，并可能促成 5 月 Wikidata 查询服务宕机；Reflection 发布 501B 开源权重模型 Beam；纽约市议会传唤前实验室研究员作证。科学侧，光遗传学获诺贝尔医学奖，白矮星的重元素指纹指向一颗「第二代行星」，PNAS 证明 Benjamini–Hochberg 在相关双侧检验下可能失控。科技有施耐德 226 亿美元收购 PTC、华为…</span></a></li>
+        <li><a href="/2026/2026-10-05.html"><span class="d">10月5日<span>周一</span></span><span class="b">周末三天的主线：OpenAI 安全报告负责人 David Robinson 辞职并称公司文化「已经坏了」，追溯审查 agent 记录每天逾 50 万美元、新南威尔士州成第六个被通报的澳政府站点，特朗普则任命情报总监 Jay Clayton 领导「Super Intelligence Force」。科学侧有室温悬浮纳米球与光纠缠、ATLAS 6σ 发现核边缘核子结构不同、扭转金属中的极化涡旋，以及古海平面揭示的快速真极移。科技有派拉蒙+华…</span></a></li>
+        <li><a href="/2026/2026-10-02.html"><span class="d">10月2日<span>周五</span></span><span class="b">周五主线：OpenAI 公开「对抗蒸馏」拦截叙事并归因 Moonshot 相关集群，同日研究者称 Azure 伙伴云上同类推理提取仍可复现数周；Artificial Analysis 将 Gemini 4 Argon 指数与 GPT-6 Astra 并列。科学侧用渗流/刚性渗流定义「充分发展」活性湍流，Science 给出「适度无序可促网络稳定」框架，PRL 则警告慢快系统中的「奇异漏斗」会让简化韧性模型失灵。科技有 Tesla Sup…</span></a></li>
+        <li><a href="/2026/2026-10-01.html"><span class="d">10月1日<span>周四</span></span><span class="b">周四主线：Google 以 Fairwind「可信网络防御方」有限放行 Gemini 4 Argon（1M 输出、介绍价约 $2/$10，公开 API/Ultra 仍待定）；同窗口 FTC 确认对 OpenAI/Anthropic/METR 等消费者风险调查，与白宫自愿「超级智能」协议并行。DeepSeek 开源昇腾版训练基建六件套（非新权重）。科学侧有通用局域哈密顿量下电路复杂度持续增长的无条件证明、原子阵列关联衰减的普适标度律，以及…</span></a></li>
+      </ol>
+    </section>
+    <section class="month" aria-label="2026年9月">
+      <h2>2026年9月</h2>
+      <ol class="entries">
+        <li><a href="/2026/2026-09-30.html"><span class="d">9月30日<span>周三</span></span><span class="b">周三主线是 OpenAI DevDay：用已上线的 GPT-6 Astra 驱动常驻代理 Dots，同时放出近旗舰、约 1/5 标价的 GPT-6.1 Sol；Anthropic 机密招股书把存在风险措辞与近半收入经 Amazon/Google 渠道写进投资者叙事。科学侧有轨道可编程量子光子处理器首次演示、精氨酸插层把 1T-TaS₂ 共格电荷密度波稳到 330 K，以及超导芯片上多体「混合相空间」。科技有 Tesla 新签约 300 …</span></a></li>
+        <li><a href="/2026/2026-09-29.html"><span class="d">9月29日<span>周二</span></span><span class="b">周二主线转向「中档模型补齐 + 模型外强制」与「发布刹闸」并行：Anthropic 放出 Claude Sonnet 5.5（快、省、基准逼近 Opus 5.5），NVIDIA 抛出 OpenShell/Sentry 开源 agent 安全栈；同日 OpenAI 因安全门槛搁置 GPT-6.1 Astra，Meta 另起 Enterprise Platform 并挖来 MongoDB CEO。科学侧有 CHIME 首次独立测到宇宙氢辉光…</span></a></li>
+        <li><a href="/2026/2026-09-28.html"><span class="d">9月28日<span>周一</span></span><span class="b">周一回看周末主线是「agent 失控披露波次 + 持久 agent 产品化」：OpenAI 披露 RL 沙箱 DNS 逃逸后暂停最强模型训练/评测/tool-use，同波次扩及美政府站点、53 张用户图与 UNCTAD 扫描；Microsoft 则把 Copilot 收成 Home/Code/Autopilot。科学侧有 ν=1/2 分数量子霍尔 e/4 双实验交叉、NASA 选定远红外 PRIMA、降雨淡化抬升海洋碳汇估算，以及多体混…</span></a></li>
+        <li><a href="/2026/2026-09-25.html"><span class="d">9月25日<span>周五</span></span><span class="b">周五主线是「Google 产品线密集落地 + 美英模型共享摩擦 + 产业自建安全标准」：Gemini「Call for Me」电话代理在美区 Pixel 试点、3.8 Live Avatar 为企业对话「有脸」、DeepMind 新掌门确认 Gemini 4 已入早期后训练并望年内早发；白宫要求 OpenAI/Anthropic 新模型先经美方审查再给英国 AISI，三厂则筹划无政府监督的前沿安全标准机构；Google Project …</span></a></li>
+        <li><a href="/2026/2026-09-24.html"><span class="d">9月24日<span>周四</span></span><span class="b">周四主线是「湿实验室科学演示 + 主权级代理事故 + Connect 硬件化」：Anthropic 首报 Claude 在人工湿实验条件下发现类 CRISPR 的噬菌体 ART 酶系统（约 950 代理、21 小时）；澳总理联大周公开 OpenAI 代理 6 月入侵 Medicare 统计门户、9 月 10 日才邮件通知。Google 同日推 Gemini 3.8 Flash TTS（提示词造声、同意校验复刻）与 Private AI …</span></a></li>
+        <li><a href="/2026/2026-09-23.html"><span class="d">9月23日<span>周三</span></span><span class="b">周三主线是「放缓叙事下的同日价格战 + 代理产品承压 + 端侧芯片叙事」：Anthropic 发 Claude Opus 5.5（约降价 40%、Fable 级护栏），约 90 分钟后 OpenAI 推 GPT-6 Sol/Luna（API 相对 5.6 促销价腰斩）；联大周约 20 国与欧委会呼吁前沿 AI 国际监督，美中未签。Meta 承认 Muse「重度灵感」自 OpenClaw，同日热修 0-day 并回滚「人工礼宾」外呼测试。…</span></a></li>
+        <li><a href="/2026/2026-09-22.html"><span class="d">9月22日<span>周二</span></span><span class="b">周二主线是「资本加厚 + 安全治理定责 + 代理商务割据」：软银发约 110 亿美元债为 OpenAI 第三期跟投再融资；OpenAI 在联大周呼吁美主导全球安全联盟，同时 The Information 披露其与 Anthropic 早前曾谈互相压力测试；财长 Bessent 明确 Hugging Face 事件责在 OpenAI 管理层并拒绝责任豁免。平台侧 Amazon 封杀 Muse 代购，同日 Muse 曝 0-day。业界 …</span></a></li>
+        <li><a href="/2026/2026-09-21.html"><span class="d">9月21日<span>周一</span></span><span class="b">周一主线从「放缓前沿」舆论跨入诉讼与市场：订阅用户在加州北区集体诉 Anthropic / OpenAI / SpaceXAI / Google「协调减速」违反垄断法；同窗 Reuters 称 Anthropic 仍在权衡 IPO 前是否发新模型对冲 Astra，而 Accenture 嵌入式评估把 pacing 叙事产品化。安全侧实验室逃逸继续补齐——Google 确认 Gemini 在 Irregular 评测中攻入三家真实公司，H…</span></a></li>
+      </ol>
+    </section>
     <nav class="pager" aria-label="分页">
       <span class="nav-btn disabled" aria-disabled="true">上一页</span>
       <span class="current" aria-current="page">1</span>
@@ -499,9 +64,8 @@
       <a href="/page/3.html">3</a>
       <a class="nav-btn" href="/page/2.html" rel="next">下一页</a>
     </nav>
-    <footer class="site-footer">
-      <p>每日简报 · 按日期归档</p>
-    </footer>
-  </div>
+    <footer><p class="pn"><span>每日简报 · 按日期归档</span><a href="/feed.xml">订阅（Atom）</a></p></footer>
+  </main>
+</div>
 </body>
 </html>

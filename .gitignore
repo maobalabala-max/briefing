@@ -10,6 +10,7 @@
 *.py
 !/rebuild_index.py
 !/build_site_meta.py
+!/tools/*.py
 
 # Scratch / temp files
 draft*/
