@@ -125,20 +125,14 @@ def page_href(page_num):
     return f"/page/{page_num}.html"
 
 
-def render_pager(page_num, total_pages):
+def render_pager(page_num, total_pages, page_count=0):
     if total_pages <= 1:
         return ""
-
     parts = []
-    # Prev
     if page_num > 1:
-        parts.append(
-            f'<a class="nav-btn" href="{page_href(page_num - 1)}" rel="prev">上一页</a>'
-        )
+        parts.append(f'<a class="nav-btn" href="{page_href(page_num - 1)}" rel="prev">← 上一页</a>')
     else:
-        parts.append('<span class="nav-btn disabled" aria-disabled="true">上一页</span>')
-
-    # Page numbers (show all if small; else window)
+        parts.append('<span class="nav-btn disabled" aria-disabled="true">← 上一页</span>')
     window = 7
     if total_pages <= window:
         page_range = range(1, total_pages + 1)
@@ -151,45 +145,63 @@ def render_pager(page_num, total_pages):
             parts.append(f'<a href="{page_href(1)}">1</a>')
             if start > 2:
                 parts.append('<span aria-hidden="true">…</span>')
-
     for p in page_range:
         if p == page_num:
             parts.append(f'<span class="current" aria-current="page">{p}</span>')
         else:
             parts.append(f'<a href="{page_href(p)}">{p}</a>')
-
     if total_pages > window:
         end = page_range[-1] if page_range else 0
         if end < total_pages:
             if end < total_pages - 1:
                 parts.append('<span aria-hidden="true">…</span>')
             parts.append(f'<a href="{page_href(total_pages)}">{total_pages}</a>')
-
-    # Next
     if page_num < total_pages:
-        parts.append(
-            f'<a class="nav-btn" href="{page_href(page_num + 1)}" rel="next">下一页</a>'
-        )
+        parts.append(f'<a class="nav-btn" href="{page_href(page_num + 1)}" rel="next">下一页 →</a>')
     else:
-        parts.append('<span class="nav-btn disabled" aria-disabled="true">下一页</span>')
-
+        parts.append('<span class="nav-btn disabled" aria-disabled="true">下一页 →</span>')
+    meta = f'<p class="hm-pg-meta">第 {page_num} / {total_pages} 页'
+    if page_count:
+        meta += f' · 本页 {page_count} 期'
+    meta += '</p>'
     return (
-        '    <nav class="pager" aria-label="分页">\n'
+        '    <nav class="pager hm-pager" aria-label="分页">\n'
         + "      "
         + "\n      ".join(parts)
-        + "\n    </nav>"
+        + "\n    </nav>\n"
+        + "    "
+        + meta
     )
 
 
-def render_intro(page_num, entries_all):
+
+def render_intro(page_num, entries_all, page_entries=None):
     if page_num > 1:
-        return (f'    <header class="hm-intro hm-intro-sm"><div><h1><a href="/">每日简报</a></h1>'
-                f'<p>往期 · 第 {page_num} 页</p></div></header>')
+        pe = page_entries or []
+        if pe:
+            hi, lo = pe[0]["dt"], pe[-1]["dt"]
+            if lo.year == hi.year and lo.month == hi.month:
+                span = f"{lo.month}月{lo.day}日 – {hi.day}日"
+            elif lo.year == hi.year:
+                span = f"{lo.month}月{lo.day}日 – {hi.month}月{hi.day}日"
+            else:
+                span = f"{lo.year}年{lo.month}月{lo.day}日 – {hi.year}年{hi.month}月{hi.day}日"
+            sub = f'{span} · {len(pe)} 期 · <a href="/">回到最新一期</a>'
+        else:
+            sub = '<a href="/">回到最新一期</a>'
+        return (
+            f'    <header class="hm-arch-head">'
+            f'<p class="hm-eyebrow">往期</p>'
+            f'<h1>第 {page_num} 页</h1>'
+            f'<p class="hm-arch-sub">{sub}</p></header>'
+        )
     n_ai = sum(1 for e in entries_all if e["ai"])
     first = entries_all[-1]["dt"] if entries_all else None
     since = ""
     if first:
-        lab = f"{first.month}.{first.day:02d}" if first.year == entries_all[0]["dt"].year else f"{first.year}.{first.month}.{first.day:02d}"
+        lab = (f"{first.month}.{first.day:02d}"
+               if first.year == entries_all[0]["dt"].year
+               else f"{first.year}.{first.month}.{first.day:02d}")
         since = f'<div><b>{lab}</b><span>收录自</span></div>'
     return (f'    <header class="hm-intro"><div><h1>每日简报</h1>'
             f'<p>AI、科学、科技业界、抗衰老——每天约 10 件事，事实与判断分开。</p></div>'
@@ -201,11 +213,12 @@ def render_page(page_num, total_pages, page_entries, newest_href, entries_all=No
     entries_all = entries_all or page_entries
     title = "每日简报" if page_num == 1 else f"每日简报 · 第 {page_num} 页"
     cards_html = render_cards(page_entries)
-    pager_html = render_pager(page_num, total_pages)
+    pager_html = render_pager(page_num, total_pages, len(page_entries))
     hero = latest_hero(entries_all[0]) if page_num == 1 and entries_all else ""
     links = [("最新一期", newest_href, False), ("AI 日报", "/ai/", False), ("订阅", "/feed.xml", False)]
     arch_h = ('    <div class="hm-arch-h"><h2>往期</h2><p class="hm-legend"><i></i>有同日 AI 日报</p></div>'
               if page_num == 1 else "")
+    body_cls = "idx home" + (" hm-arch-page" if page_num > 1 else "")
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -217,10 +230,10 @@ def render_page(page_num, total_pages, page_entries, newest_href, entries_all=No
   {HEAD_ICONS}
   <link rel="stylesheet" href="{css_href(ROOT)}">
 </head>
-<body class="idx home">
+<body class="{body_cls}">
 {bar_html("", links, brand=True)}
 <main class="hm">
-{render_intro(page_num, entries_all)}
+{render_intro(page_num, entries_all, page_entries)}
 {hero}
   <section class="hm-arch">
 {arch_h}

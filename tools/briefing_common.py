@@ -177,34 +177,61 @@ def _md(d) -> str:
     return f"{d.month}月{d.day}日"
 
 
-def week_archive_html(items: list[dict], side_label: str, side_missing: str, side_class: str = "ai") -> str:
-    """Week-grouped archive rows shared by / , /page/N.html and /ai/.
+def week_archive_html(items: list[dict], side_label: str, side_missing: str = "", side_class: str = "ai") -> str:
+    """Week-grouped archive rows shared by /, /page/N.html and /ai/.
 
-    items: dicts with d (date), href, blurb, side (href of the same-day companion page or None).
-    The companion pill (e.g. 「AI 日报」 on the briefing archive, 「简报」 on the AI archive) is a separate link."""
-    import datetime as _dt
+    items: dicts with d (date), href, blurb, side (same-day companion href or None).
+    Companion pill only renders when side is present (no empty dash). Week ranges use the
+    dates actually on this page, so a week split across pages shows the partial span.
+    Month banners appear when the month of a week's newest entry changes.
+    """
+    import datetime as _dt  # local: avoid a top-level datetime import in this module
+    if not items:
+        return '<p class="hm-empty">暂无往期。</p>'
     groups: list[tuple[tuple[int, int], list[dict]]] = []
     for e in items:
         wk = tuple(e["d"].isocalendar()[:2])
         if not groups or groups[-1][0] != wk:
             groups.append((wk, []))
         groups[-1][1].append(e)
-    out = []
-    for (y, w), rows in groups:
-        mon = _dt.date.fromisocalendar(y, w, 1)
-        fri = mon + _dt.timedelta(days=4)
-        rng = f"{_md(mon)} – {_md(fri) if fri.month != mon.month else str(fri.day) + '日'}"
+    out: list[str] = []
+    prev_month: tuple[int, int] | None = None
+    for _wk, rows in groups:
+        first, last = rows[0]["d"], rows[-1]["d"]  # newest-first within the week
+        lo, hi = last, first
+        mkey = (hi.year, hi.month)
+        if mkey != prev_month:
+            out.append(f'<p class="hm-month"><span>{mkey[0]}</span>{mkey[1]} 月</p>')
+            prev_month = mkey
+        if lo == hi:
+            rng = _md(lo)
+        elif lo.month == hi.month:
+            rng = f"{lo.month}月{lo.day}日 – {hi.day}日"
+        else:
+            rng = f"{_md(lo)} – {_md(hi)}"
         n_side = sum(1 for e in rows if e.get("side"))
         lis = []
         for e in rows:
             d = e["d"]
-            side = (f'<a class="hm-pill hm-{side_class}" href="{html.escape(e["side"])}">{side_label}</a>' if e.get("side")
-                    else f'<span class="hm-pill hm-none" title="{side_missing}">—</span>')
-            lis.append(f'<li><a class="hm-main" href="{html.escape(e["href"])}"><span class="hm-d">{d.month:02d}.{d.day:02d}'
-                       f'<small>周{WEEKDAY[d.weekday()]}</small></span><span class="hm-b">{html.escape(e["blurb"])}</span></a>'
-                       f'<span class="hm-st">{side}</span></li>')
+            side = (
+                f'<a class="hm-pill hm-{side_class}" href="{html.escape(e["side"])}" '
+                f'title="同日 {side_label}">{side_label}</a>'
+                if e.get("side") else ""
+            )
+            blurb = (e.get("blurb") or "").strip() or "（无摘要）"
+            lis.append(
+                f'<li{" class=\"has-side\"" if e.get("side") else ""}>'
+                f'<a class="hm-main" href="{html.escape(e["href"])}">'
+                f'<span class="hm-d"><b>{d.month:02d}.{d.day:02d}</b>'
+                f'<small>周{WEEKDAY[d.weekday()]}</small></span>'
+                f'<span class="hm-b">{html.escape(blurb)}</span></a>'
+                f'<span class="hm-st">{side}</span></li>'
+            )
         sp = " " if side_label[:1].isascii() else ""
         cnt = f"{len(rows)} 期" + (f" · {n_side} 期有{sp}{side_label}" if n_side else "")
-        out.append(f'<section class="hm-week"><h3>{rng}<span>{cnt}</span></h3>'
-                   f'<ul class="hm-rows">{"".join(lis)}</ul></section>')
+        out.append(
+            f'<section class="hm-week">'
+            f'<header class="hm-wh"><h3>{rng}</h3><span>{cnt}</span></header>'
+            f'<ul class="hm-rows">{"".join(lis)}</ul></section>'
+        )
     return "\n".join(out)
