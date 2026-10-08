@@ -17,7 +17,11 @@ PER_PAGE = 14  # ~12–16 entries per page
 import sys as _sys
 _sys.dont_write_bytecode = True
 _sys.path.insert(0, str(ROOT / "tools"))
-from briefing_common import HEAD_ICONS, bar_html, css_href  # noqa: E402  (shared v2 design helpers)
+from briefing_common import HEAD_ICONS, SECTIONS, bar_html, css_href, week_archive_html  # noqa: E402  (shared v2 design helpers)
+import validate_briefing as V  # noqa: E402  (data-file loader: assigns story ids)
+import os  # noqa: E402
+
+DATA_DIR = Path(os.environ.get("BRIEFING_DATA_DIR", "/workspace/daily-briefing/data"))  # per-day JSON (outside the repo)
 
 
 def collect_entries():
@@ -42,43 +46,77 @@ def collect_entries():
             "month_key": (dt.year, dt.month),
             "month_label": f"{dt.year}年{dt.month}月",
             "lede": lede,
+            "ai": f"/ai/{date_s}.html" if (ROOT / "ai" / f"{date_s}.html").exists() else None,
         })
     return entries
 
 
+LEAD_PREFIX = re.compile(r"^(今天的主线|今日主线|周[一二三四五六日]主线|周末三天的主线|本周主线)[：:]\s*")
+
+
 def render_cards(page_entries):
-    """Group entries by month and render the v2 archive list (shared /assets/briefing.css)."""
-    sections = []
-    current_key = None
-    items = []
+    """Week-grouped archive rows with the same-day AI daily indicator (homepage design B)."""
+    items = [{"d": e["dt"], "href": e["href"], "blurb": LEAD_PREFIX.sub("", e["lede"]), "side": e["ai"]}
+             for e in page_entries]
+    return week_archive_html(items, "AI 日报", "当日没有 AI 日报")
 
-    def flush():
-        nonlocal items
-        if not items:
-            return
-        lis = []
-        for e in items:
-            blurb_src = e["lede"]
-            blurb = html.escape(blurb_src[:220] + ("…" if len(blurb_src) > 220 else ""))
-            lis.append(
-                f'        <li><a href="{e["href"]}"><span class="d">{e["dt"].month}月{e["dt"].day}日'
-                f'<span>{e["dow"]}</span></span><span class="b">{blurb}</span></a></li>'
-            )
-        sections.append(
-            f'    <section class="month" aria-label="{items[0]["month_label"]}">\n'
-            f'      <h2>{items[0]["month_label"]}</h2>\n      <ol class="entries">\n'
-            + "\n".join(lis)
-            + "\n      </ol>\n    </section>"
-        )
-        items = []
 
-    for e in page_entries:
-        if e["month_key"] != current_key:
-            flush()
-            current_key = e["month_key"]
-        items.append(e)
-    flush()
-    return "\n".join(sections)
+def latest_hero(e):
+    """Page-1 hero: latest issue card. 今日三件事 only when that day's data file exists."""
+    d = e["dt"]
+    page = (ROOT / e["href"].lstrip("/")).read_text(encoding="utf-8")
+    meta = re.search(r'<p class="meta">(.*?)</p>', page, re.S)
+    meta_t = re.sub(r"<[^>]+>", " ", meta.group(1)) if meta else ""
+    bits = []
+    m = re.search(r"阅读约\s*(\d+)\s*分钟", meta_t)
+    if m:
+        bits.append(f"阅读约 {m.group(1)} 分钟")
+    m = re.search(r"(\d+)\s*条要闻\s*·\s*(\d+)\s*条简讯", meta_t)
+    if m:
+        bits += [f"{m.group(1)} 条要闻", f"{m.group(2)} 条简讯"]
+    cards = ""
+    dp = DATA_DIR / f'{e["iso"]}.json'
+    if dp.exists() and 'content="briefing-v2"' in page:
+        try:
+            data = V.load(dp)
+            sec_of = {}
+            for k, _short, _full in SECTIONS:
+                sec = data.get("sections", {}).get(k) or {}
+                for it in (sec.get("stories") or []) + (sec.get("briefs") or []):
+                    sec_of[it.get("id")] = k
+            short = {k: sh for k, sh, _f in SECTIONS}
+            cs = []
+            for i, t in enumerate(data.get("top3") or [], 1):
+                ks = []
+                for r in t.get("refs") or []:
+                    k = sec_of.get(r)
+                    if k and k not in ks:
+                        ks.append(k)
+                pills = "".join(f'<span class="hm-tag k-{k}">{short[k]}</span>' for k in ks)
+                ref = (t.get("refs") or [""])[0]
+                cs.append(f'<a class="hm-card" href="{e["href"]}#{html.escape(ref)}"><span class="hm-lb">{pills}'
+                          f'<span class="hm-n">0{i}</span></span><span class="hm-ct">{html.escape(t["lead"].rstrip("。"))}</span>'
+                          f'<span class="hm-cf">{html.escape(t["fact"])}</span></a>')
+            if cs:
+                cards = f'<div class="hm-cards" aria-label="今日三件事">{"".join(cs)}</div>'
+        except Exception as exc:  # never break the index over a bad data file
+            print(f"WARN  hero: skipped 今日三件事 ({exc})")
+    ai_btn = ""
+    if e["ai"]:
+        ap = (ROOT / e["ai"].lstrip("/")).read_text(encoding="utf-8")
+        m = re.search(r"(\d+)\s*条重点", re.sub(r"<[^>]+>", " ", ap.split("</head>", 1)[-1]))
+        ai_btn = f'<a class="hm-btn hm-btn2" href="{e["ai"]}">今日 AI 日报{" · " + m.group(1) + " 条重点" if m else ""}</a>'
+    meta_html = "".join(f"<span>{b}</span>" for b in bits)
+    return f"""    <article class="hm-hero">
+      <div class="hm-spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="hm-in">
+        <p class="hm-hrow"><span class="hm-date">{d.month:02d}.{d.day:02d}<small>{e["dow"]} · {d.year}</small></span><span class="hm-badge">最新一期</span></p>
+        <h2 class="hm-sum"><a href="{e["href"]}">{html.escape(LEAD_PREFIX.sub("", e["lede"]))}</a></h2>
+        {f'<p class="hm-meta">{meta_html}</p>' if meta_html else ""}
+        {cards}
+        <p class="hm-actions"><a class="hm-btn" href="{e["href"]}">阅读本期 →</a>{ai_btn}</p>
+      </div>
+    </article>"""
 
 
 def page_href(page_num):
@@ -143,11 +181,31 @@ def render_pager(page_num, total_pages):
     )
 
 
-def render_page(page_num, total_pages, page_entries, newest_href):
+def render_intro(page_num, entries_all):
+    if page_num > 1:
+        return (f'    <header class="hm-intro hm-intro-sm"><div><h1><a href="/">每日简报</a></h1>'
+                f'<p>往期 · 第 {page_num} 页</p></div></header>')
+    n_ai = sum(1 for e in entries_all if e["ai"])
+    first = entries_all[-1]["dt"] if entries_all else None
+    since = ""
+    if first:
+        lab = f"{first.month}.{first.day:02d}" if first.year == entries_all[0]["dt"].year else f"{first.year}.{first.month}.{first.day:02d}"
+        since = f'<div><b>{lab}</b><span>收录自</span></div>'
+    return (f'    <header class="hm-intro"><div><h1>每日简报</h1>'
+            f'<p>AI、科学、科技业界、抗衰老——每天约 10 件事，事实与判断分开。</p></div>'
+            f'<div class="hm-stat"><div><b>{len(entries_all)}</b><span>期简报</span></div>'
+            f'<div><b>{n_ai}</b><span>期 AI 日报</span></div>{since}</div></header>')
+
+
+def render_page(page_num, total_pages, page_entries, newest_href, entries_all=None):
+    entries_all = entries_all or page_entries
     title = "每日简报" if page_num == 1 else f"每日简报 · 第 {page_num} 页"
     cards_html = render_cards(page_entries)
     pager_html = render_pager(page_num, total_pages)
+    hero = latest_hero(entries_all[0]) if page_num == 1 and entries_all else ""
     links = [("最新一期", newest_href, False), ("AI 日报", "/ai/", False), ("订阅", "/feed.xml", False)]
+    arch_h = ('    <div class="hm-arch-h"><h2>往期</h2><p class="hm-legend"><i></i>有同日 AI 日报</p></div>'
+              if page_num == 1 else "")
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -159,19 +217,18 @@ def render_page(page_num, total_pages, page_entries, newest_href):
   {HEAD_ICONS}
   <link rel="stylesheet" href="{css_href(ROOT)}">
 </head>
-<body class="idx">
+<body class="idx home">
 {bar_html("", links, brand=True)}
-<div class="page">
-  <main>
-    <header class="mast">
-      <h1><a class="home" href="/">每日简报</a></h1>
-      <p class="sub">AI、科学、科技业界、抗衰论文 · <a href="/ai/">AI 前沿情报日报</a></p>
-    </header>
+<main class="hm">
+{render_intro(page_num, entries_all)}
+{hero}
+  <section class="hm-arch">
+{arch_h}
 {cards_html}
 {pager_html}
-    <footer><p class="pn"><span>每日简报 · 按日期归档</span><a href="/feed.xml">订阅（Atom）</a></p></footer>
-  </main>
-</div>
+  </section>
+</main>
+<footer class="hm-foot"><span>每日简报 · 共 {len(entries_all)} 期</span><span><a href="/feed.xml">Atom 订阅</a> · <a href="/ai/">AI 前沿情报日报</a></span></footer>
 </body>
 </html>
 """
@@ -192,7 +249,7 @@ def main():
     for page_num in range(1, total_pages + 1):
         start = (page_num - 1) * PER_PAGE
         chunk = entries[start : start + PER_PAGE]
-        html_out = render_page(page_num, total_pages, chunk, newest_href)
+        html_out = render_page(page_num, total_pages, chunk, newest_href, entries)
         if page_num == 1:
             out_path = ROOT / "index.html"
         else:

@@ -170,3 +170,41 @@ def bar_html(chips: str, links: list[tuple[str, str, bool]], brand: bool = False
 HEAD_ICONS = ('<link rel="icon" href="/favicon.ico" sizes="any">\n'
               '  <link rel="icon" href="/favicon.svg" type="image/svg+xml">\n'
               '  <link rel="apple-touch-icon" href="/apple-touch-icon.png">')
+
+
+# ---- homepage / archive list (design B "卡片", 2026-10-08) -----------------
+def _md(d) -> str:
+    return f"{d.month}月{d.day}日"
+
+
+def week_archive_html(items: list[dict], side_label: str, side_missing: str, side_class: str = "ai") -> str:
+    """Week-grouped archive rows shared by / , /page/N.html and /ai/.
+
+    items: dicts with d (date), href, blurb, side (href of the same-day companion page or None).
+    The companion pill (e.g. 「AI 日报」 on the briefing archive, 「简报」 on the AI archive) is a separate link."""
+    import datetime as _dt
+    groups: list[tuple[tuple[int, int], list[dict]]] = []
+    for e in items:
+        wk = tuple(e["d"].isocalendar()[:2])
+        if not groups or groups[-1][0] != wk:
+            groups.append((wk, []))
+        groups[-1][1].append(e)
+    out = []
+    for (y, w), rows in groups:
+        mon = _dt.date.fromisocalendar(y, w, 1)
+        fri = mon + _dt.timedelta(days=4)
+        rng = f"{_md(mon)} – {_md(fri) if fri.month != mon.month else str(fri.day) + '日'}"
+        n_side = sum(1 for e in rows if e.get("side"))
+        lis = []
+        for e in rows:
+            d = e["d"]
+            side = (f'<a class="hm-pill hm-{side_class}" href="{html.escape(e["side"])}">{side_label}</a>' if e.get("side")
+                    else f'<span class="hm-pill hm-none" title="{side_missing}">—</span>')
+            lis.append(f'<li><a class="hm-main" href="{html.escape(e["href"])}"><span class="hm-d">{d.month:02d}.{d.day:02d}'
+                       f'<small>周{WEEKDAY[d.weekday()]}</small></span><span class="hm-b">{html.escape(e["blurb"])}</span></a>'
+                       f'<span class="hm-st">{side}</span></li>')
+        sp = " " if side_label[:1].isascii() else ""
+        cnt = f"{len(rows)} 期" + (f" · {n_side} 期有{sp}{side_label}" if n_side else "")
+        out.append(f'<section class="hm-week"><h3>{rng}<span>{cnt}</span></h3>'
+                   f'<ul class="hm-rows">{"".join(lis)}</ul></section>')
+    return "\n".join(out)
