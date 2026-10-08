@@ -125,54 +125,66 @@ def page_href(page_num):
     return f"/page/{page_num}.html"
 
 
+ARROW_L = ('<svg class="pg-ic" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">'
+           '<path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.7" '
+           'stroke-linecap="round" stroke-linejoin="round"/></svg>')
+ARROW_R = ('<svg class="pg-ic" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">'
+           '<path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" '
+           'stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+def page_window(page_num, total_pages):
+    """Page numbers to show: always first/last, current ±1, gaps as None (… ellipsis)."""
+    if total_pages <= 7:
+        return list(range(1, total_pages + 1))
+    keep = {1, total_pages, page_num - 1, page_num, page_num + 1}
+    if page_num <= 4:
+        keep |= {2, 3, 4, 5}
+    if page_num >= total_pages - 3:
+        keep |= {total_pages - 4, total_pages - 3, total_pages - 2, total_pages - 1}
+    nums = sorted(n for n in keep if 1 <= n <= total_pages)
+    out = []
+    for n in nums:
+        if out and n - out[-1] > 1:
+            out.append(None)
+        out.append(n)
+    return out
+
+
 def render_pager(page_num, total_pages, page_count=0):
+    """Pagination control (homepage bottom + /page/N.html). Desktop: ‹ 上一页 · 1 2 3 · 下一页 ›;
+    ≤560px: ‹ · 2 / 3 · › (numbers hidden). No JS."""
     if total_pages <= 1:
         return ""
-    parts = []
     if page_num > 1:
-        parts.append(f'<a class="nav-btn" href="{page_href(page_num - 1)}" rel="prev">← 上一页</a>')
+        prev = (f'<a class="pg-btn pg-prev" href="{page_href(page_num - 1)}" rel="prev" '
+                f'aria-label="上一页（第 {page_num - 1} 页）">{ARROW_L}<span class="pg-lb">上一页</span></a>')
     else:
-        parts.append('<span class="nav-btn disabled" aria-disabled="true">← 上一页</span>')
-    window = 7
-    if total_pages <= window:
-        page_range = range(1, total_pages + 1)
-    else:
-        start = max(1, page_num - 2)
-        end = min(total_pages, start + window - 1)
-        start = max(1, end - window + 1)
-        page_range = range(start, end + 1)
-        if start > 1:
-            parts.append(f'<a href="{page_href(1)}">1</a>')
-            if start > 2:
-                parts.append('<span aria-hidden="true">…</span>')
-    for p in page_range:
-        if p == page_num:
-            parts.append(f'<span class="current" aria-current="page">{p}</span>')
-        else:
-            parts.append(f'<a href="{page_href(p)}">{p}</a>')
-    if total_pages > window:
-        end = page_range[-1] if page_range else 0
-        if end < total_pages:
-            if end < total_pages - 1:
-                parts.append('<span aria-hidden="true">…</span>')
-            parts.append(f'<a href="{page_href(total_pages)}">{total_pages}</a>')
+        prev = f'<span class="pg-btn pg-prev is-off" aria-disabled="true">{ARROW_L}<span class="pg-lb">上一页</span></span>'
     if page_num < total_pages:
-        parts.append(f'<a class="nav-btn" href="{page_href(page_num + 1)}" rel="next">下一页 →</a>')
+        nxt = (f'<a class="pg-btn pg-next" href="{page_href(page_num + 1)}" rel="next" '
+               f'aria-label="下一页（第 {page_num + 1} 页）"><span class="pg-lb">下一页</span>{ARROW_R}</a>')
     else:
-        parts.append('<span class="nav-btn disabled" aria-disabled="true">下一页 →</span>')
-    meta = f'<p class="hm-pg-meta">第 {page_num} / {total_pages} 页'
-    if page_count:
-        meta += f' · 本页 {page_count} 期'
-    meta += '</p>'
+        nxt = f'<span class="pg-btn pg-next is-off" aria-disabled="true"><span class="pg-lb">下一页</span>{ARROW_R}</span>'
+    nums = []
+    for n in page_window(page_num, total_pages):
+        if n is None:
+            nums.append('<li class="pg-gap" aria-hidden="true">…</li>')
+        elif n == page_num:
+            nums.append(f'<li><span class="pg-n is-cur" aria-current="page">{n}</span></li>')
+        else:
+            nums.append(f'<li><a class="pg-n" href="{page_href(n)}" aria-label="第 {n} 页">{n}</a></li>')
+    meta = (f'<span class="pg-pos">第 {page_num} / {total_pages} 页</span>'
+            + (f'<span class="pg-pos"> · </span>本页 {page_count} 期' if page_count else ""))
     return (
-        '    <nav class="pager hm-pager" aria-label="分页">\n'
-        + "      "
-        + "\n      ".join(parts)
-        + "\n    </nav>\n"
-        + "    "
-        + meta
+        '    <nav class="pg" aria-label="往期分页">\n'
+        f'      {prev}\n'
+        f'      <ol class="pg-nums">{"".join(nums)}</ol>\n'
+        f'      <span class="pg-compact"><b>{page_num}</b> / {total_pages}</span>\n'
+        f'      {nxt}\n'
+        '    </nav>\n'
+        f'    <p class="pg-meta">{meta}</p>'
     )
-
 
 
 def render_intro(page_num, entries_all, page_entries=None):
