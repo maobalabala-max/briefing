@@ -192,6 +192,23 @@ def render(data: dict, site: Path) -> str:
 '''
 
 
+def link_ai_page(site: Path, d: str) -> None:
+    """The AI daily usually publishes first and then links to the newest combined page; repoint its
+    「每日简报」/「最新综合简报」links at today's page. Only v2 AI pages are touched."""
+    ai = site / "ai" / f"{d}.html"
+    if not ai.exists():
+        return
+    raw = ai.read_text(encoding="utf-8")
+    if 'content="ai-daily-v2"' not in raw:
+        return
+    href = f"/{d[:4]}/{d}.html"
+    new = re.sub(r'<a href="[^"]*">每日简报</a>', f'<a href="{href}">每日简报</a>', raw, count=1)
+    new = re.sub(r'<a href="[^"]*">最新综合简报</a>', f'<a href="{href}">当日综合简报</a>', new)
+    if new != raw:
+        ai.write_text(new, encoding="utf-8")
+        print(f"linked 当日综合简报 in {ai} (commit it too)")
+
+
 def patch_prev(site: Path, d: str) -> None:
     _, _, prev_path = neighbours(site, d)
     if not prev_path:
@@ -236,6 +253,7 @@ def main(argv: list[str]) -> int:
     print(f"wrote {out} ({len(html_out)} bytes)")
     if "--no-patch-prev" not in argv:
         patch_prev(site, d)
+    link_ai_page(site, d)
     return 0
 
 
