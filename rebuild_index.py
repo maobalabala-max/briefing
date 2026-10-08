@@ -154,7 +154,7 @@ def render_page(page_num, total_pages, page_entries, newest_href):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{html.escape(title)}</title>
-  <meta name="description" content="每日简报归档：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。">
+  <meta name="description" content="每日简报归档：覆盖 AI、科学、科技业界与抗衰论文。">
   <meta name="color-scheme" content="light dark">
   {HEAD_ICONS}
   <link rel="stylesheet" href="{css_href(ROOT)}">
@@ -165,7 +165,7 @@ def render_page(page_num, total_pages, page_entries, newest_href):
   <main>
     <header class="mast">
       <h1><a class="home" href="/">每日简报</a></h1>
-      <p class="sub">工作日 08:00 更新 · 亚洲/上海 · AI、科学、科技业界、抗衰论文 · <a href="/ai/">AI 前沿情报日报</a></p>
+      <p class="sub">AI、科学、科技业界、抗衰论文 · <a href="/ai/">AI 前沿情报日报</a></p>
     </header>
 {cards_html}
 {pager_html}

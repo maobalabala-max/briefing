@@ -32,10 +32,10 @@ MARK_END = "<!-- site-meta:end -->"
 
 DATE_RE = r"[0-9]{4}-[0-9]{2}-[0-9]{2}"
 FALLBACK = {
-    "briefing": "每日简报：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。",
+    "briefing": "每日简报：覆盖 AI、科学、科技业界与抗衰论文。",
     "ai": "AI 前沿情报日报：事实与推断分开，宁缺毋滥。",
-    "index": "每日简报归档：工作日更新，覆盖 AI、科学、科技业界与抗衰论文。",
-    "ai-index": "AI 前沿情报日报归档：工作日更新，事实与推断分开。",
+    "index": "每日简报归档：覆盖 AI、科学、科技业界与抗衰论文。",
+    "ai-index": "AI 前沿情报日报归档：事实与推断分开，宁缺毋滥。",
 }
 
 
@@ -197,7 +197,7 @@ def build_feed() -> str:
         '<?xml version="1.0" encoding="utf-8"?>',
         '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="zh-CN">',
         f"  <title>{SITE_NAME}</title>",
-        "  <subtitle>工作日更新的综合每日简报与 AI 前沿情报日报（亚洲/上海时间）</subtitle>",
+        "  <subtitle>综合每日简报与 AI 前沿情报日报</subtitle>",
         f"  <id>{SITE_URL}/</id>",
         f'  <link rel="alternate" type="text/html" href="{SITE_URL}/"/>',
         f'  <link rel="self" type="application/atom+xml" href="{SITE_URL}/feed.xml"/>',
