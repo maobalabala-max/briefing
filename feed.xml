@@ -5,9 +5,18 @@
   <id>https://jianbao.space/</id>
   <link rel="alternate" type="text/html" href="https://jianbao.space/"/>
   <link rel="self" type="application/atom+xml" href="https://jianbao.space/feed.xml"/>
-  <updated>2026-10-08T08:00:00+08:00</updated>
+  <updated>2026-10-09T08:00:00+08:00</updated>
   <author><name>每日简报</name></author>
   <icon>https://jianbao.space/favicon-32.png</icon>
+  <entry>
+    <title>每日简报 · 2026年10月9日</title>
+    <link rel="alternate" type="text/html" href="https://jianbao.space/2026/2026-10-09.html"/>
+    <id>https://jianbao.space/2026/2026-10-09.html</id>
+    <published>2026-10-09T08:00:00+08:00</published>
+    <updated>2026-10-09T08:00:00+08:00</updated>
+    <category term="每日简报"/>
+    <summary>Google 把 Gemini 做成有独立身份的企业 agent；台积电三季度营收创新高；抗衰上，达沙替尼+槲皮素首次在人体肝纤维化 RCT 里拿到组织学改善。</summary>
+  </entry>
   <entry>
     <title>每日简报 · 2026年10月8日</title>
     <link rel="alternate" type="text/html" href="https://jianbao.space/2026/2026-10-08.html"/>
@@ -268,14 +277,5 @@
     <updated>2026-09-11T08:00:00+08:00</updated>
     <category term="每日简报"/>
     <summary>AI 安全周继续升温：Anthropic 公布蒸馏与「单人可跑国家级网攻」威胁情报，OpenAI 基金会请来 Paul Christiano 并公开一年约 4% 失控估计；NVIDIA–Palantir 把主权 AI 先装进自家供应链。业…</summary>
-  </entry>
-  <entry>
-    <title>每日简报 · 2026年9月10日</title>
-    <link rel="alternate" type="text/html" href="https://jianbao.space/2026/2026-09-10.html"/>
-    <id>https://jianbao.space/2026/2026-09-10.html</id>
-    <published>2026-09-10T08:00:00+08:00</published>
-    <updated>2026-09-10T08:00:00+08:00</updated>
-    <category term="每日简报"/>
-    <summary>昨夜苹果 Ternus 首秀落地：折叠 iPhone Duo（起价 1999 美元）连同 18 Pro 与 Health「长寿」页一起放出。AI 侧 Reuters 独家扩写 OpenAI 评测智能体：不止德文 wiki，至少十多个站点被…</summary>
   </entry>
 </feed>
